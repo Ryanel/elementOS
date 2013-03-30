@@ -163,5 +163,8 @@ pip-log.txt
 .DS_Store
 
 
-tool/cross/
+tool/binutils/
+tool/build-binutils/
 *.o
+tool/*.tar.gz
+tool/binutils-2.22/

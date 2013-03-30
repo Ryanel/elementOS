@@ -10,8 +10,8 @@ AS := nasm -f elf
 ASM := nasm
 AFLAGS := -f elf
 
-LD := ld
-LFLAGS :=
+LD := ./tool/binutils/bin/i586-elf-ld
+LFLAGS := -m elf_i386
 
 #FILES
 KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/arch/*.s))
