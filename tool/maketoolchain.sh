@@ -3,7 +3,7 @@ echo "Requires SVM, cmake, make, and binutils"
 mkdir cross
 cd cross
 svn co http://llvm.org/svn/llvm-project/llvm/trunk llvm
-cd llvm/tools
+cd ./llvm/tools
 svn co http://llvm.org/svn/llvm-project/cfe/trunk clang
 cd ../..
 mkdir build

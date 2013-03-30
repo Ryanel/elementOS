@@ -1,5 +1,9 @@
 //#include <lsys/text.h>
 //#include <sys/error.h>
+void tmprints(char* message)
+{
+	
+}
 void panic()
 {
 	
@@ -15,9 +19,9 @@ void woah(char* reason)
 void halt(char* reason)
 {
 	tmprints("Kernel sent SIG_HALT because "); tmprints(reason); tmprints(".\n Halting...");
-	while(true)
+	while(1)
 	{
 		asm("hlt");
 	}
-	asm("hlt");
+	
 }
