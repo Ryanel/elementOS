@@ -14,11 +14,11 @@ LD := ./tool/binutils/bin/i586-elf-ld
 LFLAGS := -m elf_i386
 
 #FILES
-KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/arch/*.s))
+KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/arch/*.s))
 #Rules
 .PHONY: all clean
 
-all: system install mkmedia
+all: system install mkmedia run
 aux: docs
 system: kernel
 
@@ -50,9 +50,12 @@ clean:
 	@echo -e "\e[1;34mCleaning junk...\e[1;37m"
 	@rm -R -f ./kernel/*.o
 	@rm -R -f ./kernel/arch/*.o
+	@rm -R -f ./kernel/video/*.o
 	@rm -f kernel.elf
 
 mkmedia: mkmedia-iso
 mkmedia-iso:
 	@echo -e "\e[1;34mCreating ISO...\e[1;37m"
 	@genisoimage -R -b boot/grub/stage2_eltorito -input-charset utf-8 -quiet -no-emul-boot -boot-load-size 4 -boot-info-table -o bootable.iso fs
+run:
+	@echo -e "\e[00;31mUndefined emulator!\e[1;37m"
