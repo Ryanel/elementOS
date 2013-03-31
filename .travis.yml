@@ -5,4 +5,4 @@ before_install:
  - sudo apt-get install -qq nasm gcc make flex bison libgmp3-dev libmpfr-dev libmpc-dev libmpc-dev genisoimage
  - cd tool && chmod +x ./makebinutils.sh && ./makebinutils.sh && cd ../
 script: make all
-after_install: cd tool && chmod +x ./push-ghpages.sh && ./push-ghpages.sh && cd ../
+after_script: cd tool && chmod +x ./push-ghpages.sh && ./push-ghpages.sh && cd ../
