@@ -5,7 +5,7 @@
 #Setup
 
 CC := clang
-CFLAGS := -c -ffreestanding -fno-builtin -arch x86 -nostdlib -nostdinc -fno-stack-protector
+CFLAGS := -c -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector -target i586-pc-linux-gnu
 AS := nasm -f elf
 ASM := nasm
 AFLAGS := -f elf
