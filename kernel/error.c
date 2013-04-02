@@ -1,27 +1,36 @@
-//#include <lsys/text.h>
-//#include <sys/error.h>
-void tmprints(char* message)
-{
-	
-}
+#include <textmode.h>
+//#include <error.h>
+/**
+Called when something errors, but it is NOT recoverable.
+**/
 void panic()
 {
 	
 }
+/**
+Called when something errors, but it is recoverable.
+**/
 void oops()
 {
 	
 }
+/**
+Called when something unexpected happens.
+**/
 void woah(char* reason)
 {
-	tmprints("WOAH! "); tmprints(reason); tmprints("!\n"); 
+	tm_print("WOAH! "); tm_print(reason); tm_print("!\n"); 
 }
+/**
+Stops the machine
+**/
 void halt(char* reason)
 {
-	tmprints("Kernel sent SIG_HALT because "); tmprints(reason); tmprints(".\n Halting...");
-	while(1)
+	//tm_print("[ HALT ]Kernel sent SIG_HALT because "); tm_print(reason); tm_print(".\n");
+	log("HALT",0x0C,"Kernel sent SIG_HALT because "); tm_print(reason); tm_print(".\n");
+	log("HALT",0x0C,"Halting...");
+	asm("cli");
 	{
 		asm("hlt");
 	}
-	
 }

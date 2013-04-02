@@ -171,3 +171,4 @@ tool/binutils-2.22/
 tool/cross/
 kernel.elf
 *.iso
+docs/

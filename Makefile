@@ -18,7 +18,7 @@ KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(w
 #Rules
 .PHONY: all clean
 
-all: system install mkmedia run
+all: system install mkmedia docs run
 aux: docs
 system: kernel
 
@@ -59,3 +59,10 @@ mkmedia-iso:
 	@genisoimage -R -b boot/grub/stage2_eltorito -input-charset utf-8 -quiet -no-emul-boot -boot-load-size 4 -boot-info-table -o bootable.iso fs
 run:
 	@echo -e "\e[00;31mUndefined emulator!\e[1;37m"
+docs: clean-docs
+	@echo -e "\e[1;34mGenerating Documentation...\e[1;37m"
+	@doxygen Doxyfile
+clean-docs:
+	@rm -f -r /docs/
+ready-dist: clean
+dist: ready-dist
