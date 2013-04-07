@@ -48,7 +48,8 @@ view:
 	@${CC} ${CFLAGS} -target ${ARCH} ${DEBUG} -O3 -I./kernel/includes -o $@ $<
 kernel/boot.o: kernel/arch/x86-boot.s
 	@${AS} -o kernel/boot.o kernel/arch/x86-boot.s
-
+kernel/raspi-boot.o: kernel/arch/arm-raspi-boot.s
+	@${AS} -o kernel/boot.o kernel/arch/x86-boot.s
 clean:
 	@echo -e "\e[1;34mCleaning junk...\e[1;37m"
 	@rm -R -f ./kernel/*.o
@@ -56,10 +57,12 @@ clean:
 	@rm -R -f ./kernel/video/*.o
 	@rm -f kernel.elf
 
-mkmedia: mkmedia-iso
+mkmedia: mkmedia-iso mkmedia-raspi
 mkmedia-iso:
 	@echo -e "\e[1;34mCreating ISO...\e[1;37m"
 	@genisoimage -R -b boot/grub/stage2_eltorito -input-charset utf-8 -quiet -no-emul-boot -boot-load-size 4 -boot-info-table -o bootable.iso fs
+mkmedia-raspi:
+	
 run:
 	@echo -e "\e[00;31mUndefined emulator!\e[1;37m"
 docs: clean-docs
@@ -71,3 +74,5 @@ ready-dist: clean
 dist: ready-dist
 arch:
 	@echo -e "\e[1;34mMaking for ${ARCH}\e[1;37m"
+
+raspberry-pi: clean kernel/raspi-boot.o ${KERNELFILES}
