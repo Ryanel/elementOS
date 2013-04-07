@@ -128,6 +128,7 @@ void log(const char *type,uint8_t color,const char *c)
     tm_putch('[');
     tm_print(type);
     tm_putch(']');
+    
     attributeByte=attributeByte_o;
     tm_putch(' ');
     tm_print(c);

@@ -3,9 +3,11 @@
 # Based on the Makefile of Kevin Lange (https://github.com/klange)
 #=================================================================
 #Setup
+ARCH := i386-elf-linux-gnu
 
 CC := clang
-CFLAGS := -c -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector -target i586-pc-linux-gnu
+CFLAGS := -c -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector
+DEBUG := 
 AS := nasm -f elf
 ASM := nasm
 AFLAGS := -f elf
@@ -17,10 +19,9 @@ LFLAGS := -m elf_i386
 KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/arch/*.s))
 #Rules
 .PHONY: all clean
-
 all: system install mkmedia docs run
 aux: docs
-system: kernel
+system: arch kernel
 
 install:
 	@echo -e "\e[1;34mInstalling kernel into filesystem...\e[1;37m"
@@ -29,20 +30,22 @@ install:
 kernel: clean kernel/boot.o ${KERNELFILES}
 	@echo -e "\e[1;34mBuilding Kernel...\e[1;37m"
 	@${LD} ${LFLAGS} -T kernel/link.ld -o kernel.elf ${KERNELFILES}
-commands:
-	@echo -e "\e[1;34mAvalable commands (prefixed by make):\e[1;37m"
-	@echo "-------------------------------------"
-	@echo "all      | Makes Everything"
-	@echo "run      | Runs OS in a emulator"
-	@echo "system   | Builds the core system"
-	@echo "install  | Makes the base filesystem"
-	@echo "         | but does not install it to"
-	@echo "         | a media."
-	@echo "mkmedia-*| Creates a bootable system "
-	@echo "         | image of the selected type"
+commands: view
+	#/@echo -e "\e[1;34mAvalable commands (prefixed by make):\e[1;37m"
+	#@echo "-------------------------------------"
+	#@echo "all      | Makes Everything"
+	#@echo "run      | Runs OS in a emulator"
+	#@echo "system   | Builds the core system"
+	#@echo "install  | Makes the base filesystem"
+	#@echo "         | but does not install it to"
+	#@echo "         | a media."
+	#@echo "mkmedia-*| Creates a bootable system "
+	#@echo "         | image of the selected type"
+view:
+	@nano Makefile
 
 %.o: %.c
-	@${CC} ${CFLAGS} -I./kernel/includes -o $@ $<
+	@${CC} ${CFLAGS} -target ${ARCH} ${DEBUG} -O3 -I./kernel/includes -o $@ $<
 kernel/boot.o: kernel/arch/x86-boot.s
 	@${AS} -o kernel/boot.o kernel/arch/x86-boot.s
 
@@ -63,6 +66,8 @@ docs: clean-docs
 	@echo -e "\e[1;34mGenerating Documentation...\e[1;37m"
 	@doxygen Doxyfile
 clean-docs:
-	@rm -f -r /docs/
+	-@rm -f -r /docs/
 ready-dist: clean
 dist: ready-dist
+arch:
+	@echo -e "\e[1;34mMaking for ${ARCH}\e[1;37m"

@@ -34,13 +34,16 @@ mboot:
 
 [GLOBAL start]                  ; Kernel entry point.
 [EXTERN main]                   ; This is the entry point of our C code
+;You see nothing...
 
 start:
-  push    ebx                   ; Load multiboot header location
-
+  push ebx                   ; Load multiboot header location
+  push eax                   ; Magic #
   ; Execute the kernel:
   cli                         ; Disable interrupts.
   call main                   ; call our main() function.
+  pop eax                     ; Pop for consistanty?
+  pop ebx
   jmp $                       ; Enter an infinite loop, to stop the processor
                               ; executing whatever rubbish is in the memory
                               ; after our kernel!

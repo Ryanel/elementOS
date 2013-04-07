@@ -45,7 +45,7 @@ INLINE_GROUPED_CLASSES = NO
 INLINE_SIMPLE_STRUCTS  = NO
 TYPEDEF_HIDES_STRUCT   = NO
 SYMBOL_CACHE_SIZE      = 0
-LOOKUP_CACHE_SIZE      = 0
+LOOKUP_CACHE_SIZE      = 2
 #---------------------------------------------------------------------------
 # Build related configuration options
 #---------------------------------------------------------------------------
@@ -67,7 +67,7 @@ SHOW_INCLUDE_FILES     = YES
 FORCE_LOCAL_INCLUDES   = NO
 INLINE_INFO            = YES
 SORT_MEMBER_DOCS       = YES
-SORT_BRIEF_DOCS        = NO
+SORT_BRIEF_DOCS        = YES
 SORT_MEMBERS_CTORS_1ST = NO
 SORT_GROUP_NAMES       = NO
 SORT_BY_SCOPE_NAME     = NO

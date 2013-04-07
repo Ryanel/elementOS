@@ -47,6 +47,9 @@ void wait(int val)
       i++;
    i=0;
 }
+/**
+Main process init point
+**/
 int main()
 {
    int waittime=500000;
@@ -60,7 +63,7 @@ int main()
       z++;
    }
    wait(waittime*2);
-
-   halt("TOO MUCH RAINBOW");
+   //TODO: Add arch-specific code here.
+   //halt("TOO MUCH RAINBOW");
 	return 0;
 }
