@@ -53,7 +53,9 @@ Main process init point
 int main()
 {
    int waittime=500000;
-	drawBar();
+   #ifdef ARCH_x86
+	drawBar(); // TODO: Adapt drawBar to ARM
+   #endif
 	tm_clear();
 	uint8_t z =0x00;
    while(z!=0xFF)

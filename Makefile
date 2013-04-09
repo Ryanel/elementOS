@@ -4,7 +4,7 @@
 #=================================================================
 #Setup
 ARCH := i386-elf-linux-gnu
-
+ARCHPRE := ARCH_x86
 CC := clang
 CFLAGS := -c -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector
 DEBUG := 
@@ -62,7 +62,7 @@ mkmedia-iso:
 	@echo -e "\e[1;34mCreating ISO...\e[1;37m"
 	@genisoimage -R -b boot/grub/stage2_eltorito -input-charset utf-8 -quiet -no-emul-boot -boot-load-size 4 -boot-info-table -o bootable.iso fs
 mkmedia-raspi:
-	
+
 run:
 	@echo -e "\e[00;31mUndefined emulator!\e[1;37m"
 docs: clean-docs

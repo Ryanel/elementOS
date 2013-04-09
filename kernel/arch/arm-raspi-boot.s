@@ -1,49 +1,38 @@
 ;
 ; boot.s
 ; The entry point of the kernel
-; By (as in edited by) Corwin Mcknight -- Credit to James Molloy (jamesmolloy.co.uk)
+; By (as in edited by) Corwin Mcknight
 ;
-
-MBOOT_PAGE_ALIGN    equ 1<<0    ; Load kernel and modules on a page boundary
-MBOOT_MEM_INFO      equ 1<<1    ; Provide your kernel with memory info
-MBOOT_HEADER_MAGIC  equ 0x1BADB002 ; Multiboot Magic value
-; NOTE: We do not use MBOOT_AOUT_KLUDGE. It means that GRUB does not
-; pass us a symbol table.
-MBOOT_HEADER_FLAGS  equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO
-MBOOT_CHECKSUM      equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
-
-
-[BITS 32]                       ; All instructions should be 32-bit.
-
-[GLOBAL mboot]                  ; Make 'mboot' accessible from C.
-[EXTERN code]                   ; Start of the '.text' section.
-[EXTERN bss]                    ; Start of the .bss section.
-[EXTERN end]                    ; End of the last loadable section.
-
-mboot:
-  dd  MBOOT_HEADER_MAGIC        ; GRUB will search for this value on each
-                                ; 4-byte boundary in your kernel file
-  dd  MBOOT_HEADER_FLAGS        ; How GRUB should load your file / settings
-  dd  MBOOT_CHECKSUM            ; To ensure that the above values are correct
-   
-  dd  mboot                     ; Location of this descriptor
-  dd  code                      ; Start of kernel '.text' (code) section.
-  dd  bss                       ; End of kernel '.data' section.
-  dd  end                       ; End of kernel.
-  dd  start                     ; Kernel entry point (initial EIP).
-
-[GLOBAL start]                  ; Kernel entry point.
-[EXTERN main]                   ; This is the entry point of our C code
-;You see nothing...
-
+;To keep this in the first portion of the binary.
+section ".text.boot"
+global start 
 start:
-  push ebx                   ; Load multiboot header location
-  push eax                   ; Magic #
-  ; Execute the kernel:
-  cli                         ; Disable interrupts.
-  call main                   ; call our main() function.
-  pop eax                     ; Pop for consistanty?
-  pop ebx
-  jmp $                       ; Enter an infinite loop, to stop the processor
-                              ; executing whatever rubbish is in the memory
-                              ; after our kernel!
+  ; Setup the stack.
+  mov sp, 0x8000
+ 
+  ; Clear out bss.
+  ldr r4, = bss_start
+  ldr r9, = bss_end
+  mov r5, 0
+  mov r6, 0
+  mov r7, 0
+  mov r8, 0
+  ;b 2 ;What?
+ 
+1:
+  ;store multiple at r4.
+  stmia r4!, {r5-r8}
+ 
+  ; If we are still below bss_end, loop.
+2:
+  cmp r4, r9
+  blo 1b
+ 
+  ; Call kernel_main
+  ldr r3, arm_main
+  blx r3
+ 
+  ; halt
+halt:
+  wfe
+  b halt
