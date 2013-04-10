@@ -4,7 +4,6 @@
 #=================================================================
 #Setup
 ARCH := i386-elf-linux-gnu
-ARCHPRE := ARCH_x86
 CC := clang
 CFLAGS := -c -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector
 DEBUG := 
@@ -45,7 +44,7 @@ view:
 	@nano Makefile
 
 %.o: %.c
-	@${CC} ${CFLAGS} -target ${ARCH} ${DEBUG} -O3 -I./kernel/includes -o $@ $<
+	@${CC} ${CFLAGS} -target ${ARCH} -D ARCH=${ARCH} ${DEBUG} -O3 -I./kernel/includes -o $@ $<
 kernel/boot.o: kernel/arch/x86-boot.s
 	@${AS} -o kernel/boot.o kernel/arch/x86-boot.s
 kernel/raspi-boot.o: kernel/arch/arm-raspi-boot.s

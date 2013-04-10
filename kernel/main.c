@@ -53,18 +53,17 @@ Main process init point
 int main()
 {
    int waittime=500000;
-   #ifdef ARCH_x86
+   #if ARCH=i386-elf-linux-gnu
 	drawBar(); // TODO: Adapt drawBar to ARM
    #endif
 	tm_clear();
-	uint8_t z =0x00;
-   while(z!=0xFF)
-   {
-      log("CLOR",z,"RAINBOW\n");
-      wait(waittime);
-      z++;
-   }
-   wait(waittime*2);
+   tm_print("Starting elementOS...");
+   #if ARCH=i386-elf-linux-gnu
+   tm_print("Architecture: x86(Generic)");
+   #endif
+   #if ARCH=i386-elf-linux-gnu
+   tm_print("Architecture: ARM(Raspberry Pi)");
+   #endif
    //TODO: Add arch-specific code here.
    //halt("TOO MUCH RAINBOW");
 	return 0;
