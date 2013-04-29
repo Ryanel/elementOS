@@ -37,7 +37,6 @@ void drawBar()
    	i=i+2;
    	videoram[80-(v*2)+i] = 'S';
    	i=i+2;
-   	
 }
 void halt(char* reason);
 void wait(int val)
@@ -53,17 +52,9 @@ Main process init point
 int main()
 {
    int waittime=500000;
-   #if ARCH=i386-elf-linux-gnu
-	drawBar(); // TODO: Adapt drawBar to ARM
-   #endif
-	tm_clear();
+   drawBar();
+   tm_clear();
    tm_print("Starting elementOS...");
-   #if ARCH=i386-elf-linux-gnu
-   tm_print("Architecture: x86(Generic)");
-   #endif
-   #if ARCH=i386-elf-linux-gnu
-   tm_print("Architecture: ARM(Raspberry Pi)");
-   #endif
    //TODO: Add arch-specific code here.
    //halt("TOO MUCH RAINBOW");
 	return 0;

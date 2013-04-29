@@ -28,7 +28,7 @@ install:
 
 kernel: clean kernel/boot.o ${KERNELFILES}
 	@echo -e "\e[1;34mBuilding Kernel...\e[1;37m"
-	@${LD} ${LFLAGS} -T kernel/link.ld -o kernel.elf ${KERNELFILES}
+	@${LD} ${LFLAGS} -T kernel/x86-link.ld -o kernel.elf ${KERNELFILES}
 commands: view
 	#/@echo -e "\e[1;34mAvalable commands (prefixed by make):\e[1;37m"
 	#@echo "-------------------------------------"
@@ -46,8 +46,6 @@ view:
 %.o: %.c
 	@${CC} ${CFLAGS} -target ${ARCH} -D ARCH=${ARCH} ${DEBUG} -O3 -I./kernel/includes -o $@ $<
 kernel/boot.o: kernel/arch/x86-boot.s
-	@${AS} -o kernel/boot.o kernel/arch/x86-boot.s
-kernel/raspi-boot.o: kernel/arch/arm-raspi-boot.s
 	@${AS} -o kernel/boot.o kernel/arch/x86-boot.s
 clean:
 	@echo -e "\e[1;34mCleaning junk...\e[1;37m"
@@ -73,5 +71,3 @@ ready-dist: clean
 dist: ready-dist
 arch:
 	@echo -e "\e[1;34mMaking for ${ARCH}\e[1;37m"
-
-raspberry-pi: clean kernel/raspi-boot.o ${KERNELFILES}
