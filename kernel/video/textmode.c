@@ -7,38 +7,38 @@ char cursor_y=1;
 uint8_t attributeByte = (0 /*black*/ << 4) | (15 /*white*/ & 0x0F);
 static void move_cursor()
 {
-   // The screen is 80 characters wide...
-   uint16_t cursorLocation = cursor_y * 80 + cursor_x;
-   outb(0x3D4, 14);                  // Tell the VGA board we are setting the high cursor byte.
-   outb(0x3D5, cursorLocation >> 8); // Send the high cursor byte.
-   outb(0x3D4, 15);                  // Tell the VGA board we are setting the low cursor byte.
-   outb(0x3D5, cursorLocation);      // Send the low cursor byte.
+	// The screen is 80 characters wide...
+	uint16_t cursorLocation = cursor_y * 80 + cursor_x;
+	outb(0x3D4, 14);                  // Tell the VGA board we are setting the high cursor byte.
+	outb(0x3D5, cursorLocation >> 8); // Send the high cursor byte.
+	outb(0x3D4, 15);                  // Tell the VGA board we are setting the low cursor byte.
+	outb(0x3D5, cursorLocation);      // Send the low cursor byte.
 }
 static void scroll()
 {
-   // Get a space character with the default colour attributes.
-   uint16_t blank = 0x20 /* space */ | (attributeByte << 8);
+	// Get a space character with the default colour attributes.
+	uint16_t blank = 0x20 /* space */ | (attributeByte << 8);
 
-   // Row 25 is the end, this means we need to scroll up
-   if(cursor_y >= 25)
-   {
-       // Move the current text chunk that makes up the screen
-       // back in the buffer by a line
-       int i;
-       for (i = 1*80; i < 24*80; i++)
-       {
-           video_memory[i] = video_memory[i+80];
-       }
+	// Row 25 is the end, this means we need to scroll up
+	if(cursor_y >= 25)
+	{
+	   // Move the current text chunk that makes up the screen
+	   // back in the buffer by a line
+	   int i;
+	   for (i = 1*80; i < 24*80; i++)
+	   {
+		   video_memory[i] = video_memory[i+80];
+	   }
 
-       // The last line should now be blank. Do this by writing
-       // 80 spaces to it.
-       for (i = 24*80; i < 25*80; i++)
-       {
-           video_memory[i] = blank;
-       }
-       // The cursor should now be on the last line.
-       cursor_y = 24;
-   }
+	   // The last line should now be blank. Do this by writing
+	   // 80 spaces to it.
+	   for (i = 24*80; i < 25*80; i++)
+	   {
+		   video_memory[i] = blank;
+	   }
+	   // The cursor should now be on the last line.
+	   cursor_y = 24;
+	}
 }
 void tm_putch(char c)
 {
@@ -64,39 +64,39 @@ void tm_putch(char c)
    }
 
    // Handle carriage return
-   else if (c == '\r')
-   {
-       cursor_x = 0;
-   }
+	else if (c == '\r')
+	{
+	   cursor_x = 0;
+	}
 
-   // Handle newline by moving cursor back to left and increasing the row
-   else if (c == '\n')
-   {
-       cursor_x = 0;
-       cursor_y++;
-   }
-   // Handle any other printable character.
-   else if(c >= ' ')
-   {
-       location = video_memory + (cursor_y*80 + cursor_x);
-       *location = c | attribute;
-       cursor_x++;
-   }
+	// Handle newline by moving cursor back to left and increasing the row
+	else if (c == '\n')
+	{
+	   cursor_x = 0;
+	   cursor_y++;
+	}
+	// Handle any other printable character.
+	else if(c >= ' ')
+	{
+		location = video_memory + (cursor_y*80 + cursor_x);
+		*location = c | attribute;
+		cursor_x++;
+	}
 
-   // Check if we need to insert a new line because we have reached the end
-   // of the screen.
-   if (cursor_x >= 80)
-   {
-       cursor_x = 0;
-       cursor_y ++;
-   }
+	// Check if we need to insert a new line because we have reached the end
+	// of the screen.
+	if (cursor_x >= 80)
+	{
+		cursor_x = 0;
+		cursor_y ++;
+	}
 
-   // Scroll the screen if needed.
-   scroll();
-   // Move the hardware cursor.
-   move_cursor();
+	// Scroll the screen if needed.
+	scroll();
+	// Move the hardware cursor.
+	move_cursor();
 
-}
+	}
 void tm_clear()
 {
    // Make an attribute byte for the default colours
@@ -128,7 +128,7 @@ void log(const char *type,uint8_t color,const char *c)
     tm_putch('[');
     tm_print(type);
     tm_putch(']');
-    
+
     attributeByte=attributeByte_o;
     tm_putch(' ');
     tm_print(c);

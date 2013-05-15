@@ -4,9 +4,8 @@
 #=================================================================
 #Setup
 ARCH := i386-elf-linux-gnu
-CC := clang
-CFLAGS := -c -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector
-DEBUG := 
+CFLAGS :=
+DEBUG :=
 AS := nasm -f elf
 ASM := nasm
 AFLAGS := -f elf
@@ -15,10 +14,11 @@ LD := ./tool/binutils/bin/i586-elf-ld
 LFLAGS := -m elf_i386
 
 #FILES
-KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/arch/*.s))
+KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/arch/*.s)) \
+$(patsubst %.c,%.o,$(wildcard kernel/arch/*.c))
 #Rules
 .PHONY: all clean
-all: system install mkmedia docs run
+all: system install mkmedia run
 aux: docs
 system: arch kernel
 
@@ -42,13 +42,14 @@ commands: view
 	#@echo "         | image of the selected type"
 view:
 	@nano Makefile
-
 %.o: %.c
-	@${CC} ${CFLAGS} -target ${ARCH} -D ARCH=${ARCH} ${DEBUG} -O3 -I./kernel/includes -o $@ $<
+	clang -c  -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector  -ccc-host-triple i586-elf-linux-gnu -I./kernel/includes -o $@ $<
+
 kernel/boot.o: kernel/arch/x86-boot.s
 	@${AS} -o kernel/boot.o kernel/arch/x86-boot.s
 clean:
 	@echo -e "\e[1;34mCleaning junk...\e[1;37m"
+	@rm -R -f *.o
 	@rm -R -f ./kernel/*.o
 	@rm -R -f ./kernel/arch/*.o
 	@rm -R -f ./kernel/video/*.o
@@ -61,10 +62,12 @@ mkmedia-iso:
 mkmedia-raspi:
 
 run:
-	@echo -e "\e[00;31mUndefined emulator!\e[1;37m"
+	@echo "Running QEMU"
+	qemu-system-i386 -cdrom bootable.iso
 docs: clean-docs
-	@echo -e "\e[1;34mGenerating Documentation...\e[1;37m"
-	@doxygen Doxyfile
+	@echo -e ""
+	-@doxygen Doxyfile
+	@echo "Generating LaTeX documentation"
 clean-docs:
 	-@rm -f -r /docs/
 ready-dist: clean
