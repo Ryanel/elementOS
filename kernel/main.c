@@ -1,5 +1,6 @@
 #include <types.h>
 #include <textmode.h>
+#include <res/strings.h> 
 void halt(char* reason);
 int gdt_install();
 /*
@@ -56,7 +57,7 @@ int main()
 	int waittime=500000;
 	drawBar();
 	tm_clear();
-	tm_print("Starting elementOS...\n");
+	tm_print(RES_STARTMESSAGE_S);tm_print(RES_VERSION_S);tm_print(" (");tm_print(RES_SOURCE_S);tm_print(")...\n");
 	//TODO: Add arch-specific code here.
 	tm_print("Compiled for i386-x86\n");
 	if(gdt_install()==0)
