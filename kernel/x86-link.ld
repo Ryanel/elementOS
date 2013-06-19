@@ -6,7 +6,11 @@
 ENTRY(start)
 SECTIONS
 {
-  .text 0x100000 :
+  . = 1M;
+  .__mbHeader : {
+      *(.__mbHeader)
+  }
+  .text :
   {
     code = .; _code = .; __code = .;
     *(.text)

@@ -14,8 +14,7 @@ LD := ./tool/binutils/bin/i586-elf-ld
 LFLAGS := -m elf_i386
 
 #FILES
-KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/arch/*.s)) \
-$(patsubst %.c,%.o,$(wildcard kernel/arch/*.c))
+KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/lib/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/arch/*.s)) $(patsubst %.c,%.o,$(wildcard kernel/arch/*.c))
 #Rules
 .PHONY: all clean
 all: system install mkmedia
