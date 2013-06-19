@@ -60,8 +60,7 @@ int main()
 	drawBar();
 	tm_clear();
 	printf("%s v.%s (%s)...\n",RES_STARTMESSAGE_S,RES_VERSION_S,RES_SOURCE_S);
-	//TODO: Add arch-specific code here.
-	tm_print("Compiled for i386-x86\n");
+	printf("Arch:%s\n",RES_ARCH_S);
 	if(gdt_install()==0)
 	{
 		log(" OK ",0x02,"Installed GDT\n");

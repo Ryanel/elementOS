@@ -1,6 +1,7 @@
 #include <types.h>
 #include <low.h>
 #include <textmode.h>
+
 uint16_t *video_memory=(uint16_t*)0xB8000;
 char cursor_x=0;
 char cursor_y=1;
