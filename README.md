@@ -32,7 +32,7 @@ Building
 ========
 See Building.md in docs/
 
-Branches / Reales
+Branches / Release
 ========
 
 Master / stable (Always working)

@@ -18,7 +18,7 @@ KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(w
 $(patsubst %.c,%.o,$(wildcard kernel/arch/*.c))
 #Rules
 .PHONY: all clean
-all: system install mkmedia run
+all: system install mkmedia
 aux: docs
 system: arch kernel
 
@@ -63,7 +63,7 @@ mkmedia-raspi:
 
 run:
 	@echo "Running QEMU"
-	qemu-system-i386 -cdrom bootable.iso
+	-qemu-system-i386 -cdrom bootable.iso
 docs: clean-docs
 	@echo -e ""
 	-@doxygen Doxyfile

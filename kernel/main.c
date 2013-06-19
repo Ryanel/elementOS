@@ -2,6 +2,7 @@
 #include <textmode.h>
 #include <res/strings.h> 
 void panic(char* reason);
+void halt(char* reason);
 int gdt_install();
 /*
 Draws the bar on the top
@@ -69,6 +70,6 @@ int main()
 		log("FAIL",0x02,"GDT installation failed. Kernel cannot initialise!\n");
 		halt("GDT could not initialise");
 	}
-	panic("Kernel reached the end of its execution");
+	halt("Kernel reached the end of its execution");
 	return 0;
 }
