@@ -58,25 +58,34 @@ Main process init point
 **/
 int main(int magic, multiboot_header_t *multiboot)
 {
-	int waittime=500000;
+	//Setup
 	drawBar();
 	tm_clear();
+
+	//Print start info
 	printf("%s v.%s (%s)...\n",RES_STARTMESSAGE_S,RES_VERSION_S,RES_SOURCE_S);
 	printf("Codename:\"%s\"\n",RES_CODENAME_S);
 	printf("Arch:%s\n",RES_ARCH_S);
-	if(magic==0x2BADB002)
-	{
+
+	//Verify Multiboot magic number
+	if (magic==0x2BADB002)
 		log("BOOT",0x02,"Magic number verified\n");
-		
-	}
-	else
-	{
+	else {
 		log("BOOT",0x02,"Magic number unverified!\n");
 		panic("Booted in incosistant state");
 	}
-	printf("Got %d modules to load!\n",multiboot->mods_count);
+
+	//Print memory
 	int memtotal = (multiboot->mem_upper)+(multiboot->mem_lower);
-	printf("Memory:%d kb high, %d kb low; a total of %dmb\n",multiboot->mem_upper,multiboot->mem_lower,memtotal/1024);
+	int memtotalmb = memtotal/1024;
+	printf("Memory:%d kb high, %d kb low; a total of %dmb\n",multiboot->mem_upper,multiboot->mem_lower,memtotalmb+1);
+
+
+	//Systen initialising
+	printf("--------------------------------------------------------------------------------");
+	printf("Initialising system...\n");
+
+	//For x86
 	if(gdt_install()==0)
 	{
 		log(" OK ",0x02,"Installed GDT\n");
@@ -86,6 +95,7 @@ int main(int magic, multiboot_header_t *multiboot)
 		log("FAIL",0x02,"GDT installation failed. Kernel cannot initialise!\n");
 		halt("GDT could not initialise");
 	}
+
 	if(idt_install()==0)
 	{
 		log(" OK ",0x02,"Installed IDT\n");
@@ -95,10 +105,9 @@ int main(int magic, multiboot_header_t *multiboot)
 		log("FAIL",0x02,"IDT installation failed. Kernel cannot initialise!\n");
 		halt("IDT could not initialise");
 	}
-	
-
-	int i=1/0;
-	printf("i=%d\n",i);
+	memtotal = (multiboot->mem_upper)+(multiboot->mem_lower);
+	memtotalmb = memtotal/0;
+	printf("Memory:%d kb high, %d kb low; a total of %dmb\n",multiboot->mem_upper,multiboot->mem_lower,memtotalmb+1);
 	halt("Kernel reached the end of its execution");
 	return 0;
 }

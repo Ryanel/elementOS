@@ -10,7 +10,7 @@ Stops the machine
 void halt(char* reason)
 {
 	//tm_print("[ HALT ]Kernel sent SIG_HALT because "); tm_print(reason); tm_print(".\n");
-	printf("--------------------------------------------------------------------------------");  //Line of 80 characters
+	printf("================================================================================");//Line of 80 characters
 	log(RES_ERROR_HALT_S,0x0C,RES_ERROR_HALTMSG_SIGHALT_S); printf("%s.\n",reason);
 
 	log(RES_ERROR_HALT_S,0x0C,RES_ERROR_HALTMSG_S);
