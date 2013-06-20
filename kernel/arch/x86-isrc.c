@@ -5,6 +5,8 @@
 *
 *  Notes: No warranty expressed or implied. Use at own risk. */
 
+void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags);
+
 struct regs
 {
     unsigned int gs, fs, es, ds;      /* pushed the segs last */
@@ -45,7 +47,7 @@ extern void isr28();
 extern void isr29();
 extern void isr30();
 extern void isr31();
-void isrs_install()
+int isrs_install()
 {
     idt_set_gate(0, (unsigned)isr0, 0x08, 0x8E);
     idt_set_gate(1, (unsigned)isr1, 0x08, 0x8E);
@@ -82,6 +84,7 @@ void isrs_install()
     idt_set_gate(29, (unsigned)isr29, 0x08, 0x8E);
     idt_set_gate(30, (unsigned)isr30, 0x08, 0x8E);
     idt_set_gate(31, (unsigned)isr31, 0x08, 0x8E);
+    return 0;
 }
 
 /* This is a simple string array. It contains the message that
@@ -126,7 +129,7 @@ unsigned char *exception_messages[] =
     "Reserved",
     "Reserved"
 };
-
+void halt(char *reason);
 /* All of our Exception handling Interrupt Service Routines will
 *  point to this function. This will tell us what exception has
 *  happened! Right now, we simply halt the system by hitting an
@@ -137,8 +140,7 @@ void fault_handler(struct regs *r)
 {
     if (r->int_no < 32)
     {
-        puts(exception_messages[r->int_no]);
-        puts(" Exception. System Halted!\n");
-        for (;;);
+        printf("Encountered interupt %d (%s)!",r->int_no,exception_messages[r->int_no]);
+        halt("because of an unhandled exception\n");
     }
 }

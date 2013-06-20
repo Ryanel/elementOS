@@ -3,10 +3,10 @@
 #include <res/strings.h> 
 #include <stdio.h>
 #include <multiboot.h>
+#include <arch/x86.h>
 void panic(char* reason);
 void halt(char* reason);
-int gdt_install();
-int idt_install();
+
 /*
 Draws the bar on the top
 */
@@ -105,9 +105,16 @@ int main(int magic, multiboot_header_t *multiboot)
 		log("FAIL",0x02,"IDT installation failed. Kernel cannot initialise!\n");
 		halt("IDT could not initialise");
 	}
-	memtotal = (multiboot->mem_upper)+(multiboot->mem_lower);
-	memtotalmb = memtotal/0;
-	printf("Memory:%d kb high, %d kb low; a total of %dmb\n",multiboot->mem_upper,multiboot->mem_lower,memtotalmb+1);
+
+	if(isrs_install()==0)
+	{
+		log(" OK ",0x02,"Installed IDT\n");
+	}
+	else
+	{
+		log("FAIL",0x02,"IDT installation failed. Kernel cannot initialise!\n");
+		halt("IDT could not initialise");
+	}
 	halt("Kernel reached the end of its execution");
 	return 0;
 }

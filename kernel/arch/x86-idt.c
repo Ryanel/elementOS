@@ -21,8 +21,6 @@ struct idt_ptr
 *  "Unhandled Interrupt" exception */
 struct idt_entry idt[256];
 struct idt_ptr idtp;
-
-/* This exists in 'start.asm', and is used to load our IDT */
 extern void idt_load();
 
 void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags)
