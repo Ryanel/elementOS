@@ -24,7 +24,7 @@ Title Bar
 --------
 The bar that is on top of the screen is the title bar. It shows status information such as the clock, the program name, status indicators, and the halt icon. It currently does none of this, except for the "elementOS" in the center.
 
-Error Handeling
+Error Handling
 --------
 There are 4 diffrent kinds of errors - a panic, an oops, a woah, and a halt. A panic is when something isn't recoverable from, but an oops is, and can be 'rewound'. A woah is when something unexpected happends, it is really just a status message. A halt is a litteral: "SYSTEM FAILURE! BOOOOOOOOOOOOM!" minus the explosion. The system litterally just stops EVERYTHING, and then sits idle. This is when something REALLY wrong happens (the system overwrites a memory mapped device). A halt can always be triggered by a CTRL+SHIFT+ALT+F12, in which the system will soft-halt (the keyboard led's will blink).
 
@@ -37,7 +37,7 @@ Branches / Release
 
 Master / stable (Always working)
 --------
-Stable code for all Architectures. Contains litterally everything. Updated every stable release.
+Stable code for all Architectures. Contains literally everything. Updated every stable release.
 
 x86 / unstable (Not working)
 --------
