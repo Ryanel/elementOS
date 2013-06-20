@@ -6,16 +6,10 @@
 *  Notes: No warranty expressed or implied. Use at own risk.
 *  Currently used as a base for elementOS; will change once it is working. (Aka. this is a control)
 * */
-
+#include <arch/x86.h>
 void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags);
 
-struct regs
-{
-	unsigned int gs, fs, es, ds;      /* pushed the segs last */
-	unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;  /* pushed by 'pusha' */
-	unsigned int int_no, err_code;    /* our 'push byte #' and ecodes do this */
-	unsigned int eip, cs, eflags, useresp, ss;   /* pushed by the processor automatically */ 
-};
+
 
 extern void isr0();
 extern void isr1();

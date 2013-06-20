@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <multiboot.h>
 #include <arch/x86.h>
+#include <devices/x86.h>
 void panic(char* reason);
 void halt(char* reason);
 
@@ -104,10 +105,60 @@ int main(int magic, multiboot_header_t *multiboot)
 		log("FAIL",0x02,"ISR installation failed. Kernel cannot initialise!\n");
 		halt("ISR's could not initialise");
 	}
+
+	if(irq_install()==0)
+	{
+		log(" OK ",0x02,"Installed IRQ handlers\n");
+	}
+	else
+	{
+		log("FAIL",0x02,"IRQ handlers installation failed. Kernel cannot initialise!\n");
+		halt("IRQ handlers could not initialise");
+	}
+	{
+		//volatile unsigned char *videoram = (unsigned char *)0xB8000;
+		pit_install();
+		asm("sti");
+		printf("Waiting for 78 ticks to see if IRQ's and PIT are setup...\n");
+		#ifndef OPT_NO_PROGRESS_BARS
+		tm_putch_at('[',0,255);tm_putch_at(']',80-1,255);
+		#endif
+		int i=0;
+		int count_inc=0;
+		#ifndef OPT_NO_PROGRESS_BARS
+		cursor_x=1;
+		#endif
+		pit_has_ticked();// Resets counter basicaly.
+		while(i<78)
+		{
+			count_inc=pit_has_ticked();
+			if(count_inc)
+			{
+				i+=count_inc;
+				#ifndef OPT_NO_PROGRESS_BARS
+				if(cursor_x!=1)
+					tm_putch_at('=',cursor_x-1,255);
+				if(cursor_x!=80)
+					tm_putch_at('>',cursor_x,255);
+				cursor_x+=count_inc;
+				
+				#endif
+			}
+			move_cursor();
+		}
+		#ifndef OPT_NO_PROGRESS_BARS
+		cursor_x=0;
+		cursor_y++;
+		#endif
+		log(" OK ",0x02,"PIT installed\n");
+		log("--->PASS",0x02,"IRQ's are working\n");
+	}
+	printf("System initialised, starting console (AN: It does nothing)\n");
 	while(true)
 	{
-		asm("pause");
+		
 	}
-	halt("Kernel reached the end of its execution");
+	
+	halt("Reached the end of its execution");
 	return 0;
 }

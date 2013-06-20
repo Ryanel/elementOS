@@ -6,7 +6,7 @@ uint16_t *video_memory=(uint16_t*)0xB8000;
 char cursor_x=0;
 char cursor_y=1;
 uint8_t attributeByte = (0 /*black*/ << 4) | (15 /*white*/ & 0x0F);
-static void move_cursor()
+void move_cursor()
 {
 	// The screen is 80 characters wide...
 	uint16_t cursorLocation = cursor_y * 80 + cursor_x;
@@ -109,8 +109,10 @@ void tm_putch_at(char c,int x,int y)
    uint16_t *location;
    int o_loc_x=cursor_x;
    int o_loc_y=cursor_y;
-   cursor_x=x;
-   cursor_y=y;
+   if(x!=255)
+   	cursor_x=x;
+   if(y!=255)
+   	cursor_y=y;
    // Handle a backspace, by moving the cursor back one space
    if (c == 0x08 && cursor_x)
    {
@@ -186,8 +188,10 @@ void tm_print_at(const char *c,int x,int y)
 {
 	int o_loc_x=cursor_x;
 	int o_loc_y=cursor_y;
-	cursor_x=x;
-	cursor_y=y;
+	if(x<81)
+		cursor_x=x;
+	if(y<25)
+		cursor_y=y;
 	int i = 0;
 	while (c[i])
 	{
@@ -195,6 +199,22 @@ void tm_print_at(const char *c,int x,int y)
 	}
 	cursor_x=o_loc_x;
 	cursor_y=o_loc_y;
+}
+
+void setAttribute(uint8_t color,int x, int y)
+{
+	int x_real;
+	int y_real;
+	if(x!=255)
+   		x_real=cursor_x;
+   	else
+   		x_real=x;
+   	if(y!=255)
+   		y_real=cursor_y;
+   	else
+   		y_real=y;
+	video_memory[(y_real * 80 + x_real)+1] = color;
+
 }
 void log(const char *type,uint8_t color,const char *c)
 {
