@@ -153,7 +153,7 @@ int main(int magic, multiboot_header_t *multiboot)
 		cursor_y++;
 		#endif
 		log(" OK ",0x02,"PIT installed\n");
-		log("--->PASS",0x02,"IRQ's are working\n");
+		log("\\---->PASS",0x02,"IRQ's are working\n");
 	}
 	printf("System initialised, starting console (AN: It does nothing)\n");
 	while(true)
