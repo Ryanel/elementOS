@@ -68,7 +68,7 @@ int main(int magic, multiboot_header_t *multiboot)
 	//Print memory
 	int memtotal = (multiboot->mem_upper)+(multiboot->mem_lower);
 	int memtotalmb = memtotal/1024;
-	printf("%^%d kb%^ high, %^%d kb%^ low; a total of %^~%d mb%^\n",0x03,multiboot->mem_upper,0x0F,0x0C,multiboot->mem_lower,0x0F,0x02,memtotalmb+1,0x0F);
+	printf("%^%d kb%^ high, %^%d kb%^ low; a total of %^~%d mb%^ %^(%d kb)%^\n",0x03,multiboot->mem_upper,0x0F,0x0C,multiboot->mem_lower,0x0F,0x02,memtotalmb+1,0x0F,0x0A,memtotal,0x0F);
 
 
 	//Systen initialising
