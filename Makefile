@@ -6,7 +6,7 @@
 ARCH := i386-elf-linux-gnu
 CFLAGS :=
 DEBUG :=
-AS := @nasm -f elf
+AS := nasm -f elf
 ASM := nasm
 AFLAGS := -f elf
 
@@ -42,7 +42,7 @@ commands: view
 view:
 	@nano Makefile
 %.o: %.c
-	@clang -c -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector  -ccc-host-triple i586-elf-linux-gnu -I./kernel/includes -o $@ $<
+	clang -c -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector  -ccc-host-triple i586-elf-linux-gnu -I./kernel/includes -o $@ $<
 
 kernel/boot.o: kernel/arch/x86-boot.s
 	@${AS} -o kernel/boot.o kernel/arch/x86-boot.s
