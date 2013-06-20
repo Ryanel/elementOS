@@ -5,6 +5,7 @@
 #Setup
 ARCH := i386-elf-linux-gnu
 CFLAGS :=
+OPTIONS :=# -D OPT_NO_PROGRESS_BARS
 DEBUG :=
 AS := nasm -f elf
 ASM := nasm
@@ -14,7 +15,7 @@ LD := ./tool/binutils/bin/i586-elf-ld
 LFLAGS := -m elf_i386
 
 #FILES
-KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/lib/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/arch/*.s)) $(patsubst %.c,%.o,$(wildcard kernel/arch/*.c))
+KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/lib/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/arch/*.s)) $(patsubst %.c,%.o,$(wildcard kernel/arch/*.c) ) $(patsubst %.c,%.o,$(wildcard kernel/devices/*.c))
 #Rules
 .PHONY: all clean
 all: system install mkmedia
@@ -42,7 +43,7 @@ commands: view
 view:
 	@nano Makefile
 %.o: %.c
-	clang -c -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector  -ccc-host-triple i586-elf-linux-gnu -I./kernel/includes -o $@ $<
+	clang -c -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector -O3 ${OPTIONS}  -ccc-host-triple i586-elf-linux-gnu -I./kernel/includes -o $@ $<
 
 kernel/boot.o: kernel/arch/x86-boot.s
 	@${AS} -o kernel/boot.o kernel/arch/x86-boot.s
