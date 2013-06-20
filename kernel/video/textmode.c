@@ -201,30 +201,12 @@ void tm_print_at(const char *c,int x,int y)
 	cursor_y=o_loc_y;
 }
 
-void setAttribute(uint8_t color,int x, int y)
+void tm_setAttribute(uint8_t color)
 {
-	int x_real;
-	int y_real;
-	if(x!=255)
-   		x_real=cursor_x;
-   	else
-   		x_real=x;
-   	if(y!=255)
-   		y_real=cursor_y;
-   	else
-   		y_real=y;
-	video_memory[(y_real * 80 + x_real)+1] = color;
-
+	attributeByte=color;
 }
 void log(const char *type,uint8_t color,const char *c)
 {
     uint8_t attributeByte_o=attributeByte;
-    attributeByte=color;
-    tm_putch('[');
-    tm_print(type);
-    tm_putch(']');
-
-    attributeByte=attributeByte_o;
-    tm_putch(' ');
-    tm_print(c);
+    printf("[%^%s%^]:%s",color,type,attributeByte_o,c);
 }

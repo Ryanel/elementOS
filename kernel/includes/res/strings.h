@@ -1,10 +1,10 @@
 #ifndef H_ELEMENTOSRESOURCES_STRINGS
 #define H_ELEMENTOSRESOURCES_STRINGS
 //Version info
-#define RES_VERSION_S "0.0.0.1"
+#define RES_VERSION_S "0.0.0.2"
 #define RES_SOURCE_S "git@github.com:Lionel07/elementOS.git"
 #define RES_STARTMESSAGE_S "Starting elementOS"
-#define RES_CODENAME_S "Best Beluga"
+#define RES_CODENAME_S "Best Blue Beluga"
 #define RES_ARCH_S "x86"
 
 #define RES_PIP_HALTED_C '!'

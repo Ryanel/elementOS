@@ -2,6 +2,7 @@
 #include <textmode.h> /* stdout, putchar(), fputs() (but not printf() :) */
 #include <stdarg.h>
 #include <stdio.h>
+#include <types.h>
 /* flags used in processing format string */
 #define	PR_LJ	0x01	/* left justify */
 #define	PR_CA	0x02	/* use A-F instead of a-f for hex */
@@ -27,6 +28,7 @@ int do_printf(const char *fmt, va_list args, fnptr_t fn, void *ptr)
 	unsigned flags, actual_wd, count, given_wd;
 	unsigned char *where, buf[PR_BUFLEN];
 	unsigned char state, radix;
+	unsigned char *color_value;
 	long num;
 
 	state = flags = count = given_wd = 0;
@@ -184,6 +186,11 @@ OK, I found my mistake. The math here is _always_ unsigned */
 					unsigned char);
 				actual_wd = 1;
 				goto EMIT2;
+				break;
+			case '^':
+				color_value = va_arg(args, unsigned char);
+				tm_setAttribute(color_value);
+				break;
 			case 's':
 /* disallow pad-left-with-zeroes for %s */
 				flags &= ~PR_LZ;

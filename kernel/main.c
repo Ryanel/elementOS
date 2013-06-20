@@ -56,8 +56,8 @@ int main(int magic, multiboot_header_t *multiboot)
 	tm_clear();
 
 	//Print start info
-	printf("%s v.%s (%s) (%s)...\n",RES_STARTMESSAGE_S,RES_VERSION_S,RES_SOURCE_S,RES_ARCH_S);
-	printf("Codename:\"%s\"\n",RES_CODENAME_S);
+	printf("%^%s v.%s (%s) (%s)...%^\n",0x09,RES_STARTMESSAGE_S,RES_VERSION_S,RES_SOURCE_S,RES_ARCH_S,0x0F);
+	printf("%^Codename:\"%s\"%^\n",0x09,RES_CODENAME_S,0x0F);
 	//Verify Multiboot magic number
 	if (magic!=0x2BADB002)
 	{
@@ -68,7 +68,7 @@ int main(int magic, multiboot_header_t *multiboot)
 	//Print memory
 	int memtotal = (multiboot->mem_upper)+(multiboot->mem_lower);
 	int memtotalmb = memtotal/1024;
-	printf("%d kb high, %d kb low; a total of ~%dmb\n",multiboot->mem_upper,multiboot->mem_lower,memtotalmb+1);
+	printf("%^%d kb%^ high, %^%d kb%^ low; a total of %^~%d mb%^\n",0x03,multiboot->mem_upper,0x0F,0x0C,multiboot->mem_lower,0x0F,0x02,memtotalmb+1,0x0F);
 
 
 	//Systen initialising
@@ -115,11 +115,13 @@ int main(int magic, multiboot_header_t *multiboot)
 		log("FAIL",0x02,"IRQ handlers installation failed. Kernel cannot initialise!\n");
 		halt("IRQ handlers could not initialise");
 	}
+
+	//PIT Setup
 	{
 		//volatile unsigned char *videoram = (unsigned char *)0xB8000;
 		pit_install();
 		asm("sti");
-		printf("Waiting for 78 ticks to see if IRQ's and PIT are setup...\n");
+		printf("Waiting for %^78%^ ticks to see if %^IRQ's%^ and %^PIT%^ are setup...\n",0x02,0x0F,0x03,0x0F,0x04,0x0F);
 		#ifndef OPT_NO_PROGRESS_BARS
 		tm_putch_at('[',0,255);tm_putch_at(']',80-1,255);
 		#endif
@@ -156,7 +158,7 @@ int main(int magic, multiboot_header_t *multiboot)
 	printf("System initialised, starting console (AN: It does nothing)\n");
 	while(true)
 	{
-		
+
 	}
 	
 	halt("Reached the end of its execution");
