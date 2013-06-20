@@ -12,4 +12,5 @@ typedef          short sint16_t;
 typedef unsigned char  uint8_t;
 typedef          char  sint8_t;
 
+typedef unsigned int   size_t;
 #endif

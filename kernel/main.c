@@ -2,9 +2,11 @@
 #include <textmode.h>
 #include <res/strings.h> 
 #include <stdio.h>
+#include <multiboot.h>
 void panic(char* reason);
 void halt(char* reason);
 int gdt_install();
+int idt_install();
 /*
 Draws the bar on the top
 */
@@ -17,10 +19,10 @@ void drawBar()
 	//Cleans Screen
 	tm_clear();
 	i=0;
-	while(i!=160)
+	while(i!=(80*2)) //80 characters, 80 color
 	{
-		videoram[i] = ' ';
-		videoram[i+1] = 0x70;
+		videoram[i] = ' ';//Char
+		videoram[i+1] = 0x70;//
 		i=i+2;
 	}
 	i=0;
@@ -54,13 +56,27 @@ void wait(int val)
 /**
 Main process init point
 **/
-int main()
+int main(int magic, multiboot_header_t *multiboot)
 {
 	int waittime=500000;
 	drawBar();
 	tm_clear();
 	printf("%s v.%s (%s)...\n",RES_STARTMESSAGE_S,RES_VERSION_S,RES_SOURCE_S);
+	printf("Codename:\"%s\"\n",RES_CODENAME_S);
 	printf("Arch:%s\n",RES_ARCH_S);
+	if(magic==0x2BADB002)
+	{
+		log("BOOT",0x02,"Magic number verified\n");
+		
+	}
+	else
+	{
+		log("BOOT",0x02,"Magic number unverified!\n");
+		panic("Booted in incosistant state");
+	}
+	printf("Got %d modules to load!\n",multiboot->mods_count);
+	int memtotal = (multiboot->mem_upper)+(multiboot->mem_lower);
+	printf("Memory:%d kb high, %d kb low; a total of %dmb\n",multiboot->mem_upper,multiboot->mem_lower,memtotal/1024);
 	if(gdt_install()==0)
 	{
 		log(" OK ",0x02,"Installed GDT\n");
@@ -70,6 +86,19 @@ int main()
 		log("FAIL",0x02,"GDT installation failed. Kernel cannot initialise!\n");
 		halt("GDT could not initialise");
 	}
+	if(idt_install()==0)
+	{
+		log(" OK ",0x02,"Installed IDT\n");
+	}
+	else
+	{
+		log("FAIL",0x02,"IDT installation failed. Kernel cannot initialise!\n");
+		halt("IDT could not initialise");
+	}
+	
+
+	int i=1/0;
+	printf("i=%d\n",i);
 	halt("Kernel reached the end of its execution");
 	return 0;
 }

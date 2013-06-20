@@ -11,3 +11,12 @@ gdt_flush:
     jmp 0x08:flush2   ; 0x08 is the offset to our code segment: Far jump!
 flush2:
     ret               ; Returns back to the C code!
+
+
+;Put IDT CODE FOR FUN, ALSO IM TOO LASY TO MAKE A NEW FILE (What is this tumblr?)
+global idt_load
+extern idtp
+idt_load: 
+    lidt [idtp]
+    ret
+		
