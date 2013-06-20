@@ -3,16 +3,18 @@
 *  By:   Brandon F. (friesenb@gmail.com)
 *  Desc: Interrupt Service Routines installer and exceptions
 *
-*  Notes: No warranty expressed or implied. Use at own risk. */
+*  Notes: No warranty expressed or implied. Use at own risk.
+*  Currently used as a base for elementOS; will change once it is working. (Aka. this is a control)
+* */
 
 void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags);
 
 struct regs
 {
-    unsigned int gs, fs, es, ds;      /* pushed the segs last */
-    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;  /* pushed by 'pusha' */
-    unsigned int int_no, err_code;    /* our 'push byte #' and ecodes do this */
-    unsigned int eip, cs, eflags, useresp, ss;   /* pushed by the processor automatically */ 
+	unsigned int gs, fs, es, ds;      /* pushed the segs last */
+	unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;  /* pushed by 'pusha' */
+	unsigned int int_no, err_code;    /* our 'push byte #' and ecodes do this */
+	unsigned int eip, cs, eflags, useresp, ss;   /* pushed by the processor automatically */ 
 };
 
 extern void isr0();
@@ -86,11 +88,6 @@ int isrs_install()
     idt_set_gate(31, (unsigned)isr31, 0x08, 0x8E);
     return 0;
 }
-
-/* This is a simple string array. It contains the message that
-*  corresponds to each and every exception. We get the correct
-*  message by accessing like:
-*  exception_message[interrupt_number] */
 unsigned char *exception_messages[] =
 {
     "Division By Zero",
@@ -130,12 +127,7 @@ unsigned char *exception_messages[] =
     "Reserved"
 };
 void halt(char *reason);
-/* All of our Exception handling Interrupt Service Routines will
-*  point to this function. This will tell us what exception has
-*  happened! Right now, we simply halt the system by hitting an
-*  endless loop. All ISRs disable interrupts while they are being
-*  serviced as a 'locking' mechanism to prevent an IRQ from
-*  happening and messing up kernel data structures */
+
 void fault_handler(struct regs *r)
 {
     if (r->int_no < 32)
