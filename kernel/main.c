@@ -64,7 +64,7 @@ int main(int magic, multiboot_header_t *multiboot)
 		log("BOOT",0x02,"Magic number unverified!\n");
 		panic("Booted in incosistant state");
 	}
-
+	printf("%^%s booted elementOS up properly!%^\n",0x04,multiboot->boot_loader_name,0x0F);
 	//Print memory
 	int memtotal = (multiboot->mem_upper)+(multiboot->mem_lower);
 	int memtotalmb = memtotal/1024;
@@ -120,6 +120,7 @@ int main(int magic, multiboot_header_t *multiboot)
 	{
 		//volatile unsigned char *videoram = (unsigned char *)0xB8000;
 		pit_install();
+		pit_phase(1000);
 		asm("sti");
 		printf("Waiting for %^78%^ ticks to see if %^IRQ's%^ and %^PIT%^ are setup...\n",0x02,0x0F,0x03,0x0F,0x04,0x0F);
 		#ifndef OPT_NO_PROGRESS_BARS
@@ -161,7 +162,7 @@ int main(int magic, multiboot_header_t *multiboot)
 
 	while(true)
 	{
-
+		asm("pause");
 	}
 	
 	halt("Reached the end of its execution");
