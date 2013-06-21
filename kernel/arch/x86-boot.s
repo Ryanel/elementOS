@@ -39,6 +39,7 @@ section .text
 ;You see nothing...
 
 start:
+  mov ebp, 0
   push ebx                   ; Load multiboot header location
   push eax                   ; Magic #
   ; Execute the kernel:
