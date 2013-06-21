@@ -5,7 +5,7 @@
 #Setup
 ARCH := i386-elf-linux-gnu
 CFLAGS :=
-OPTIONS :=# -D OPT_NO_PROGRESS_BARS
+OPTIONS := -D OPT_NO_PROGRESS_BARS
 DEBUG :=
 AS := @nasm -f elf
 ASM := nasm
@@ -43,7 +43,7 @@ commands: view
 view:
 	@nano Makefile
 %.o: %.c
-	@clang -c -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector -O3 ${OPTIONS}  -ccc-host-triple i586-elf-linux-gnu -I./kernel/includes -o $@ $<
+	@clang -c -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector ${OPTIONS}  -ccc-host-triple i586-elf-linux-gnu -I./kernel/includes -o $@ $<
 
 kernel/boot.o: kernel/arch/x86-boot.s
 	@${AS} -o kernel/boot.o kernel/arch/x86-boot.s
