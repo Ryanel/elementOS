@@ -5,9 +5,10 @@
 #include <multiboot.h>
 #include <arch/x86.h>
 #include <devices/x86.h>
+#include <arch/stacktrace.h>
+#include <elf.h>
 void panic(char* reason);
 void halt(char* reason);
-
 /*
 Draws the bar on the top
 */
@@ -54,7 +55,6 @@ int main(int magic, multiboot_header_t *multiboot)
 	//Setup
 	drawBar();
 	tm_clear();
-
 	//Print start info
 	printf("%^%s v.%s (%s) (%s)...%^\n",0x09,RES_STARTMESSAGE_S,RES_VERSION_S,RES_SOURCE_S,RES_ARCH_S,0x0F);
 	printf("%^Codename:\"%s\"%^\n",0x09,RES_CODENAME_S,0x0F);
@@ -64,6 +64,7 @@ int main(int magic, multiboot_header_t *multiboot)
 		log("BOOT",0x02,"Magic number unverified!\n");
 		panic("Booted in incosistant state");
 	}
+
 	printf("%^%s booted elementOS up properly!%^\n",0x04,multiboot->boot_loader_name,0x0F);
 	//Print memory
 	int memtotal = (multiboot->mem_upper)+(multiboot->mem_lower);
@@ -158,8 +159,9 @@ int main(int magic, multiboot_header_t *multiboot)
 	}
 	kb_install();
 	log(" OK ",0x02,"Installed Keyboard\n");
-	printf("System initialised, starting console (AN: It does nothing)\n");
-
+	setupPaging();
+	log(" OK ",0x02,"Initialised Paging\n");
+	printf("System initialised.\n");
 	while(true)
 	{
 		asm("pause");
