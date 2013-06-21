@@ -4,6 +4,7 @@ int gdt_install();
 int idt_install();
 int isrs_install();
 int irq_install();
+void kb_install();
 struct regs
 {
 	unsigned int gs, fs, es, ds;      /* pushed the segs last */
