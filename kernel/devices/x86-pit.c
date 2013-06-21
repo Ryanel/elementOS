@@ -16,39 +16,11 @@ int timer_ticks_old = 0;
 *  timer fires. By default, the timer fires 18.222 times
 *  per second. Why 18.222Hz? Some engineer at IBM must've
 *  been smoking something funky */
-int tpds=0; //timer pip dynamic state
 void timer_handler(struct regs *r)
 {
     /* Increment our 'tick count' */
     timer_ticks++;
     //printf("One second has passed\n");
-    volatile unsigned char *videoram = (unsigned char *)0xB8000;
-    switch(tpds)
-    {
-    	case 0:
-    		videoram[158]='|';
-    		tpds++;
-    		break;
-    	case 9:
-    		videoram[158]='/';
-    		tpds++;
-    		break;
-    	case 18:
-    		videoram[158]='-';
-    		tpds++;
-    		break;
-    	case 27:
-    		videoram[158]='\\'; //Just : "\"
-    		tpds++;
-    		break;
-    	case 36:
-    		videoram[158]='|';
-    		tpds=0;
-    		break;
-    	default:
-    		tpds++;
-    		break;
-    }
 }
 
 /* Sets up the system clock by installing the timer handler
