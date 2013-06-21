@@ -153,11 +153,11 @@ int main(int magic, multiboot_header_t *multiboot)
 		cursor_x=0;
 		cursor_y++;
 		#endif
-		log(" OK ",0x02,"PIT installed\n");
-		log("PASS",0x02,"IRQ's are working\n");
+		log(" OK ",0x02,"Installed PIT\n");
+		log("PASS",0x02,"Verified IRQ's\n");
 	}
 	kb_install();
-	log(" OK ",0x02,"Keyboard installed\n");
+	log(" OK ",0x02,"Installed Keyboard\n");
 	printf("System initialised, starting console (AN: It does nothing)\n");
 
 	while(true)
