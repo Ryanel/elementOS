@@ -81,9 +81,6 @@ unsigned char kbdus_sft[128] =
     0,	/* F12 Key */
     0,	/* All other keys are undefined */
 };		
-#define bool int
-#define true 1
-#define false 0
 bool keystat_crtl, keystat_shift, keystat_alt;
 bool keystat_numlock, keystat_capslock, keystat_scrolllock;
 
@@ -104,37 +101,42 @@ void keyboard_handler(struct regs *r)
     scancode = inb(0x60);
     if (scancode & 0x80)
     {
-		if(scancode == 0x2a+0x80)
-		keystat_shift = false;
-
-		if(scancode == 0x36+0x80)
-		keystat_shift = false;
+		switch(scancode-0x80)
+		{
+			case 0x2a:
+				keystat_shift = false;
+				break;
+			case 0x36:
+				keystat_shift = false;
+				break;
+			default:;
+				//Misc' breakcode
+		}
     }
 	else
 	{
-
-		if(scancode == 0x2a)
-			keystat_shift = true;		
-		if(scancode == 0x36)
-			keystat_shift = true;		
-		if(scancode == 69)
+		switch(scancode)
 		{
-		keystat_numlock = true;
+			case 0x2a: //Shift
+				keystat_shift = true;
+				break;
+			case 0x36:
+				keystat_shift = true;
+				break;
+			case 69: //lol | Numlock
+				keystat_numlock = true;
+				break;
+			case 58: //Capslock
+				keystat_capslock=keystat_capslock; //Make it flip later
+				break;
+			default:
+				if(keystat_shift)
+					tm_putch(kbdus_sft[scancode]);
+				else
+					tm_putch(kbdus[scancode]);
+				break;
+
 		}
-		if(scancode == 58)
-		{
-		if(keystat_capslock)
-		keystat_capslock = false;
-
-		else if(!keystat_capslock)
-		keystat_capslock = true;
-		}
-
-
-		if(keystat_shift)
-    		tm_putch(kbdus_sft[scancode]);
-    	else
-    		tm_putch(kbdus[scancode]);
 	}
 }
 
