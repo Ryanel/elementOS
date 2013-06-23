@@ -172,3 +172,5 @@ tool/cross/
 kernel.elf
 *.iso
 docs/
+*.tar.gz
+*.tar

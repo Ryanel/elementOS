@@ -18,7 +18,7 @@ LFLAGS := -m elf_i386
 KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/lib/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/arch/*.s)) $(patsubst %.c,%.o,$(wildcard kernel/arch/*.c) ) $(patsubst %.c,%.o,$(wildcard kernel/devices/*.c))
 #Rules
 .PHONY: all clean
-all: system install mkmedia
+all: system install mkmedia dist
 aux: docs
 system: arch kernel
 
@@ -47,12 +47,15 @@ view:
 
 kernel/boot.o: kernel/arch/x86-boot.s
 	@${AS} -o kernel/boot.o kernel/arch/x86-boot.s
-clean:
+clean: clean-docs
 	@echo -e "\e[1;34mCleaning junk...\e[1;37m"
 	@rm -R -f *.o
 	@rm -R -f ./kernel/*.o
 	@rm -R -f ./kernel/arch/*.o
 	@rm -R -f ./kernel/video/*.o
+	@rm -R -f ./kernel/devices/*.o
+	@rm -R -f ./kernel/lib/*.o
+
 	@rm -f kernel.elf
 
 mkmedia: mkmedia-iso mkmedia-raspi
@@ -72,5 +75,7 @@ clean-docs:
 	-@rm -f -r /docs/
 ready-dist: clean
 dist: ready-dist
+	@echo -e "\e[1;34mMaking Distrobution\e[1;37m"
+	@tar --exclude=elementOS-dist.tar --exclude binutils* -cf elementOS-dist.tar --add-file ./
 arch:
 	@echo -e "\e[1;34mMaking for ${ARCH}\e[1;37m"
