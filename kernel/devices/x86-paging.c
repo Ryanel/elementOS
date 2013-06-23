@@ -30,7 +30,8 @@ void setupPaging()
 	    address = address + 4096; //advance the address to the next page boundary
 	}
 
-	page_directory[0] = first_page_table; 
+	page_directory[0] = first_page_table; 
+
 	page_directory[0] |= 3;// attributes: supervisor level, read/write, present
 
 	asm volatile("mov %0, %%cr3":: "b"(page_directory));
