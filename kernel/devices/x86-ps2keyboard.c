@@ -84,6 +84,8 @@ unsigned char kbdus_sft[128] =
 bool keystat_crtl, keystat_shift, keystat_alt;
 bool keystat_numlock, keystat_capslock, keystat_scrolllock;
 
+char character_buffer[255];
+int buffer_pointer=0;
 /**
 Sends a command to the keyboard, and returns the output.
 **/
@@ -94,6 +96,27 @@ uint8_t kb_sendCommand(uint8_t command)
 
 }
 
+void kb_addToBuffer(char c)
+{
+	character_buffer[buffer_pointer++]=c;
+}
+
+char kb_readFromBuffer(int index)
+{
+	return character_buffer[index];
+}
+
+char kb_popNextFromBuffer()
+{
+	int i;
+	char result = kb_readFromBuffer(0);
+	for (i = 0; i < 256; i++)
+	{
+		character_buffer[i] = character_buffer[i+1];
+	}
+	buffer_pointer--;
+	return result;
+}
 void keyboard_handler(struct regs *r)
 {
     unsigned char scancode;
@@ -131,9 +154,9 @@ void keyboard_handler(struct regs *r)
 				break;
 			default:
 				if(keystat_shift)
-					tm_putch(kbdus_sft[scancode]);
+          kb_addToBuffer(kbdus_sft[scancode]);
 				else
-					tm_putch(kbdus[scancode]);
+          kb_addToBuffer(kbdus[scancode]);
 				break;
 
 		}

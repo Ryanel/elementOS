@@ -47,6 +47,9 @@ void drawBar()
 	
 	
 }
+
+char kb_popNextFromBuffer();
+char kb_readFromBuffer(int index);
 /**
 Main process init point
 **/
@@ -164,9 +167,9 @@ int main(int magic, multiboot_header_t *multiboot)
 	printf("System initialised.\n");
 	while(true)
 	{
-		asm("pause");
+		if(kb_readFromBuffer(0)!=0)
+			tm_putch(kb_popNextFromBuffer());
 	}
-	
 	halt("Reached the end of its execution");
 	return 0;
 }
