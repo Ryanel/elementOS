@@ -5,7 +5,7 @@
 #Setup
 ARCH := i386-elf-linux-gnu
 CFLAGS :=
-OPTIONS := -D OPT_NO_PROGRESS_BARS
+OPTIONS := #-D OPT_NO_PROGRESS_BARS
 DEBUG :=
 AS := @nasm -f elf
 ASM := nasm
@@ -24,11 +24,11 @@ system: arch kernel
 
 install:
 	@echo -e "\e[1;34mInstalling kernel into filesystem...\e[1;37m"
-	@cp ./kernel.elf fs/kernel.elf
+	cp ./kernel.elf fs/kernel.elf
 
 kernel: clean kernel/boot.o ${KERNELFILES}
 	@echo -e "\e[1;34mBuilding Kernel...\e[1;37m"
-	@${LD} ${LFLAGS} -T kernel/x86-link.ld -o kernel.elf ${KERNELFILES}
+	${LD} ${LFLAGS} -T kernel/x86-link.ld -o kernel.elf ${KERNELFILES}
 commands: view
 	#/@echo -e "\e[1;34mAvalable commands (prefixed by make):\e[1;37m"
 	#@echo "-------------------------------------"
@@ -41,41 +41,48 @@ commands: view
 	#@echo "mkmedia-*| Creates a bootable system "
 	#@echo "         | image of the selected type"
 view:
-	@nano Makefile
+	nano Makefile
 %.o: %.c
-	@clang -c -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector ${OPTIONS}  -ccc-host-triple i586-elf-linux-gnu -I./kernel/includes -o $@ $<
+	clang -c -O3 -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector ${OPTIONS}  -ccc-host-triple i586-elf-linux-gnu -I./kernel/includes -o $@ $<
 
 kernel/boot.o: kernel/arch/x86-boot.s
-	@${AS} -o kernel/boot.o kernel/arch/x86-boot.s
+	${AS} -o kernel/boot.o kernel/arch/x86-boot.s
 clean: clean-docs
 	@echo -e "\e[1;34mCleaning junk...\e[1;37m"
-	@rm -R -f *.o
-	@rm -R -f ./kernel/*.o
-	@rm -R -f ./kernel/arch/*.o
-	@rm -R -f ./kernel/video/*.o
-	@rm -R -f ./kernel/devices/*.o
-	@rm -R -f ./kernel/lib/*.o
+	rm -R -f *.o
+	rm -R -f ./kernel/*.o
+	rm -R -f ./kernel/arch/*.o
+	rm -R -f ./kernel/video/*.o
+	rm -R -f ./kernel/devices/*.o
+	rm -R -f ./kernel/lib/*.o
 
-	@rm -f kernel.elf
+	rm -f kernel.elf
 
 mkmedia: mkmedia-iso mkmedia-raspi
 mkmedia-iso:
-	@echo -e "\e[1;34mCreating ISO...\e[1;37m"
-	@genisoimage -R -b boot/grub/stage2_eltorito -input-charset utf-8 -quiet -no-emul-boot -boot-load-size 4 -boot-info-table -o bootable.iso fs
+	echo -e "\e[1;34mCreating ISO...\e[1;37m"
+	genisoimage -R -b boot/grub/stage2_eltorito -input-charset utf-8 -quiet -no-emul-boot -boot-load-size 4 -boot-info-table -o bootable.iso fs
 mkmedia-raspi:
 
 run:
-	@echo "Running QEMU"
+	echo "Running QEMU"
 	-qemu-system-i386 -cdrom bootable.iso
 docs: clean-docs
-	@echo -e ""
-	-@doxygen Doxyfile
-	@echo "Generating LaTeX documentation"
+	echo -e "Cleaning Documents"
+	-doxygen Doxyfile
+	echo "Generating LaTeX documentation"
 clean-docs:
 	-@rm -f -r /docs/
-ready-dist: clean
+ready-dist:
+	@echo -e "\e[1;34mPreparing for tarball\e[1;37m"
+	rm -R -f *.o
+	rm -R -f ./kernel/*.o
+	rm -R -f ./kernel/arch/*.o
+	rm -R -f ./kernel/video/*.o
+	rm -R -f ./kernel/devices/*.o
+	rm -R -f ./kernel/lib/*.o
 dist: ready-dist
-	@echo -e "\e[1;34mMaking Distrobution\e[1;37m"
-	@tar --exclude=elementOS-dist.tar --exclude binutils* -cf elementOS-dist.tar --add-file ./
+	@echo -e "\e[1;34mMaking Distrobution / tarball\e[1;37m"
+	tar --exclude=elementOS-dist.tar --exclude binutils* -cf elementOS-dist.tar --add-file ./
 arch:
 	@echo -e "\e[1;34mMaking for ${ARCH}\e[1;37m"

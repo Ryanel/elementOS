@@ -124,7 +124,7 @@ int main(int magic, multiboot_header_t *multiboot)
 	{
 		//volatile unsigned char *videoram = (unsigned char *)0xB8000;
 		pit_install();
-		pit_phase(1000);
+		//pit_phase(1000);
 		asm("sti");
 		printf("Waiting for %^78%^ ticks to see if %^IRQ's%^ and %^PIT%^ are setup...\n",0x02,0x0F,0x03,0x0F,0x04,0x0F);
 		#ifndef OPT_NO_PROGRESS_BARS
@@ -162,14 +162,13 @@ int main(int magic, multiboot_header_t *multiboot)
 	}
 	kb_install();
 	log(" OK ",0x02,"Installed Keyboard\n");
-	setupPaging();
-	log(" OK ",0x02,"Initialised Paging\n");
 	printf("System initialised.\n");
-	while(true)
+	int command_running=1;
+	while(command_running)
 	{
-		if(kb_readFromBuffer(0)!=0)
-			tm_putch(kb_popNextFromBuffer());
+		kb_popNextFromBuffer();
 	}
+	
 	halt("Reached the end of its execution");
 	return 0;
 }

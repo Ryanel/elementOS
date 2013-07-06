@@ -84,7 +84,7 @@ unsigned char kbdus_sft[128] =
 bool keystat_crtl, keystat_shift, keystat_alt;
 bool keystat_numlock, keystat_capslock, keystat_scrolllock;
 
-char character_buffer[255];
+char character_buffer[1024];
 int buffer_pointer=0;
 /**
 Sends a command to the keyboard, and returns the output.
@@ -98,7 +98,11 @@ uint8_t kb_sendCommand(uint8_t command)
 
 void kb_addToBuffer(char c)
 {
-	character_buffer[buffer_pointer++]=c;
+	if(buffer_pointer<1024)
+	{
+		character_buffer[buffer_pointer]=c;
+		buffer_pointer++;
+	}
 }
 
 char kb_readFromBuffer(int index)
@@ -109,12 +113,13 @@ char kb_readFromBuffer(int index)
 char kb_popNextFromBuffer()
 {
 	int i;
-	char result = kb_readFromBuffer(0);
+	char result = character_buffer[0];
 	for (i = 0; i < 256; i++)
 	{
 		character_buffer[i] = character_buffer[i+1];
 	}
-	buffer_pointer--;
+	if(buffer_pointer!=0)
+		buffer_pointer--;
 	return result;
 }
 void keyboard_handler(struct regs *r)
@@ -124,17 +129,17 @@ void keyboard_handler(struct regs *r)
     scancode = inb(0x60);
     if (scancode & 0x80)
     {
-		switch(scancode-0x80)
-		{
-			case 0x2a:
-				keystat_shift = false;
-				break;
-			case 0x36:
-				keystat_shift = false;
-				break;
-			default:;
-				//Misc' breakcode
-		}
+  		switch(scancode-0x80)
+  		{
+  			case 0x2a:
+  				keystat_shift = false;
+  				break;
+  			case 0x36:
+  				keystat_shift = false;
+  				break;
+  			default:;
+  				//Misc' breakcode
+  		}
     }
 	else
 	{
@@ -154,9 +159,16 @@ void keyboard_handler(struct regs *r)
 				break;
 			default:
 				if(keystat_shift)
+        {
+          printf("%c",kbdus_sft[scancode]);
           kb_addToBuffer(kbdus_sft[scancode]);
+        }
 				else
+        {
+          printf("%c",kbdus_sft[scancode]);
           kb_addToBuffer(kbdus[scancode]);
+        }
+          
 				break;
 
 		}
