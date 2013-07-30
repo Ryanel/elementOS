@@ -1,4 +1,3 @@
-
 export TARGET=i586-elf
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export PREFIX="$DIR/binutils"
@@ -21,3 +20,5 @@ echo "Installing to $PREFIX"
 ../binutils-2.22/configure --target=$TARGET --prefix=$PREFIX --disable-nls
 make all
 make install
+
+touch ../.binutilsinstalled
