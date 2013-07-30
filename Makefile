@@ -18,7 +18,7 @@ LFLAGS := -m elf_i386
 KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/lib/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/arch/*.s)) $(patsubst %.c,%.o,$(wildcard kernel/arch/*.c) ) $(patsubst %.c,%.o,$(wildcard kernel/devices/*.c))
 #Rules
 .PHONY: all clean
-all: system install mkmedia dist
+all: configure system install mkmedia dist
 aux: docs
 system: arch kernel
 
@@ -29,19 +29,7 @@ install:
 kernel: clean kernel/boot.o ${KERNELFILES}
 	@echo -e "\e[1;34mBuilding Kernel...\e[1;37m"
 	${LD} ${LFLAGS} -T kernel/x86-link.ld -o kernel.elf ${KERNELFILES}
-commands: view
-	#/@echo -e "\e[1;34mAvalable commands (prefixed by make):\e[1;37m"
-	#@echo "-------------------------------------"
-	#@echo "all      | Makes Everything"
-	#@echo "run      | Runs OS in a emulator"
-	#@echo "system   | Builds the core system"
-	#@echo "install  | Makes the base filesystem"
-	#@echo "         | but does not install it to"
-	#@echo "         | a media."
-	#@echo "mkmedia-*| Creates a bootable system "
-	#@echo "         | image of the selected type"
-view:
-	nano Makefile
+
 %.o: %.c
 	clang -c -O3 -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector ${OPTIONS}  -ccc-host-triple i586-elf-linux-gnu -I./kernel/includes -o $@ $<
 
@@ -58,11 +46,16 @@ clean: clean-docs
 
 	rm -f kernel.elf
 
-mkmedia: mkmedia-iso mkmedia-raspi
+mkmedia: mkmedia-iso
 mkmedia-iso:
-	echo -e "\e[1;34mCreating ISO...\e[1;37m"
+	@echo -e "\e[1;34mCreating ISO...\e[1;37m"
 	genisoimage -R -b boot/grub/stage2_eltorito -input-charset utf-8 -quiet -no-emul-boot -boot-load-size 4 -boot-info-table -o bootable.iso fs
-mkmedia-raspi:
+
+configure:
+	@echo "Building configure"
+	clang configure.c -o ./configure
+	@echo "Launching configure"
+	./configure
 
 run:
 	echo "Running QEMU"
