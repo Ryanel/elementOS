@@ -166,6 +166,7 @@ pip-log.txt
 tool/binutils/
 tool/build-binutils/
 *.o
+*.o*
 tool/*.tar.gz
 tool/binutils-2.22/
 tool/cross/

@@ -65,7 +65,7 @@ int main(int magic, multiboot_header_t *multiboot)
 	if (magic!=0x2BADB002)
 	{
 		log("BOOT",0x02,"Magic number unverified!\n");
-		panic("Booted in incosistant state");
+		panic("Booted in inconsistent state");
 	}
 
 	printf("%^%s booted elementOS up properly!%^\n",0x04,multiboot->boot_loader_name,0x0F);
@@ -75,7 +75,7 @@ int main(int magic, multiboot_header_t *multiboot)
 	printf("%^%d kb%^ high, %^%d kb%^ low; a total of %^~%d mb%^ %^(%d kb)%^\n",0x03,multiboot->mem_upper,0x0F,0x0C,multiboot->mem_lower,0x0F,0x02,memtotalmb+1,0x0F,0x0A,memtotal,0x0F);
 
 
-	//Systen initialising
+	//System initialising
 	printf("--------------------------------------------------------------------------------");
 	printf("Initialising system...\n");
 
