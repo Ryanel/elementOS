@@ -20,7 +20,7 @@ void mem_debug(char* message)
 	#endif
 }
 
-uint32_t kmalloc(uint32_t sz, int align, uint32_t *phys)
+uint32_t kmalloc_int(uint32_t sz, int align, uint32_t *phys)
 {
 	if (align == 1 && (placement_address & 0xFFFFF000))
 	{
@@ -36,4 +36,12 @@ uint32_t kmalloc(uint32_t sz, int align, uint32_t *phys)
 	uint32_t tmp = placement_address;
 	placement_address += sz;
 	return tmp;
+}
+/**
+ * Standards complient malloc
+**/
+ 
+uint32_t kmalloc(uint32_t sz)
+{
+	kmalloc_int(sz,0,0);
 }
