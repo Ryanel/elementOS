@@ -1,30 +1,50 @@
+/*
+init.c
+Has initialisation functions for the kernel, and contains the entry point
+*/
+
+//Headers
+
 #include <types.h>
 #include <textmode.h>
-#include <res/strings.h> 
+#include <res/strings.h>
 #include <stdio.h>
 #include <multiboot.h>
 #include <arch/x86.h>
 #include <devices/x86.h>
 #include <arch/stacktrace.h>
 #include <elf.h>
+
+//Prototypes
+//TODO:Add to includes
+
 void panic(char* reason);
 void halt(char* reason);
-/*
+
+char kb_readFromBuffer(int index);
+char kb_popNextFromBuffer();
+
+//Helper functions
+
+
+/**
 Draws the bar on the top
-*/
+**/
 void drawBar()
 {
 	volatile unsigned char *videoram = (unsigned char *)0xB8000;
 	int i=0;
-	int v=40-5;
+	int v=40-5; // The place to start drawing (v = vertical). 5 characters before 40
 	//Cleans Screen
 	tm_clear();
-	while(i!=(80*2)) //80 characters, 80 color
+	while(i!=(80*2)) //Draws background
 	{
-		videoram[i] = ' ';//Char
-		videoram[i+1] = 0x70;//
+		videoram[i] = ' ';// Space
+		videoram[i+1] = 0x70;// Grey
 		i=i+2;
 	}
+
+	//Draw tite
 	i=v*2;
 	videoram[i] = 'e';
 	i=i+2;
@@ -44,42 +64,44 @@ void drawBar()
 	i=i+2;
 	videoram[i] = 'S';
 	i=i+2;
-	
-	
+	// End title drawing
 }
 
-char kb_popNextFromBuffer();
-char kb_readFromBuffer(int index);
+//Init
+
 /**
 Main process init point
 **/
-int main(int magic, multiboot_header_t *multiboot)
+int kinit_x86(int magic, multiboot_header_t *multiboot)
 {
 	//Setup
 	drawBar();
 	tm_clear();
+
 	//Print start info
 	printf("%^%s v.%s (%s) (%s)...%^\n",0x09,RES_STARTMESSAGE_S,RES_VERSION_S,RES_SOURCE_S,RES_ARCH_S,0x0F);
 	printf("%^Codename:\"%s\"%^\n",0x09,RES_CODENAME_S,0x0F);
+
 	//Verify Multiboot magic number
 	if (magic!=0x2BADB002)
 	{
 		log("BOOT",0x02,"Magic number unverified!\n");
 		panic("Booted in inconsistent state");
 	}
-
 	printf("%^%s booted elementOS up properly!%^\n",0x04,multiboot->boot_loader_name,0x0F);
+
 	//Print memory
 	int memtotal = (multiboot->mem_upper)+(multiboot->mem_lower);
 	int memtotalmb = memtotal/1024;
 	printf("%^%d kb%^ high, %^%d kb%^ low; a total of %^~%d mb%^ %^(%d kb)%^\n",0x03,multiboot->mem_upper,0x0F,0x0C,multiboot->mem_lower,0x0F,0x02,memtotalmb+1,0x0F,0x0A,memtotal,0x0F);
-
 
 	//System initialising
 	printf("--------------------------------------------------------------------------------");
 	printf("Initialising system...\n");
 
 	//For x86
+
+	//GDT
 	if(gdt_install()==0)
 	{
 		log(" OK ",0x02,"Installed GDT\n");
@@ -148,7 +170,6 @@ int main(int magic, multiboot_header_t *multiboot)
 				if(cursor_x!=80)
 					tm_putch_at('>',cursor_x,255);
 				cursor_x+=count_inc;
-				
 				#endif
 			}
 			move_cursor();
@@ -168,7 +189,7 @@ int main(int magic, multiboot_header_t *multiboot)
 	{
 		kb_popNextFromBuffer();
 	}
-	
+	#endif
 	halt("Reached the end of its execution");
 	return 0;
 }

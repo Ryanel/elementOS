@@ -35,7 +35,7 @@ mboot:
   dd  start                     ; Kernel entry point (initial EIP).
 section .text
 [GLOBAL start]                  ; Kernel entry point.
-[EXTERN main]                   ; This is the entry point of our C code
+[EXTERN kinit_x86               ; This is the entry point of our C code
 ;You see nothing...
 
 start:
@@ -44,7 +44,7 @@ start:
   push eax                   ; Magic #
   ; Execute the kernel:
   cli                         ; Disable interrupts.
-  call main                   ; call our main() function.
+  call kinit_x86                   ; call our main() function.
   pop eax                     ; Pop for consistanty?
   pop ebx
   jmp $                       ; Enter an infinite loop, to stop the processor
