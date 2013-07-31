@@ -189,7 +189,6 @@ int kinit_x86(int magic, multiboot_header_t *multiboot)
 	{
 		kb_popNextFromBuffer();
 	}
-	#endif
 	halt("Reached the end of its execution");
 	return 0;
 }
