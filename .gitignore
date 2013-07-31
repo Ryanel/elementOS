@@ -175,3 +175,4 @@ kernel.elf
 docs/
 *.tar.gz
 *.tar
+configure
