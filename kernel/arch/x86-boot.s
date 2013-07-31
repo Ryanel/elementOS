@@ -35,7 +35,7 @@ mboot:
   dd  start                     ; Kernel entry point (initial EIP).
 section .text
 [GLOBAL start]                  ; Kernel entry point.
-[EXTERN kinit_x86               ; This is the entry point of our C code
+[EXTERN kinit_x86]              ; This is the entry point of our C code
 ;You see nothing...
 
 start:
