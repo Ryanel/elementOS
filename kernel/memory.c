@@ -11,6 +11,8 @@ Manages all aspects of the memory.
 //Self
 #include <memory.h>
 
+uint32_t placement_address = 0;
+
 void mem_debug(char* message)
 {
 	#ifdef ENABLE_DEBUG
