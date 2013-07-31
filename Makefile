@@ -5,7 +5,7 @@
 #Setup
 ARCH := i386-elf-linux-gnu
 CFLAGS :=
-OPTIONS := #-D OPT_NO_PROGRESS_BARS
+OPTIONS := -D ENABLE_DEBUG #-D OPT_NO_PROGRESS_BARS
 DEBUG :=
 AS := @nasm -f elf
 ASM := nasm
