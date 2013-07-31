@@ -20,12 +20,12 @@ void mem_debug(char* message)
 	#endif
 }
 
-void kmalloc(uint32_t sz, int align, uint32_t *phys)
+uint32_t kmalloc(uint32_t sz, int align, uint32_t *phys)
 {
 	if (align == 1 && (placement_address & 0xFFFFF000))
 	{
 		placement_address &= 0xFFFFF000;
-		placement_address += 0x1000
+		placement_address += 0x1000;
 	}
 	if (phys)
 	{
