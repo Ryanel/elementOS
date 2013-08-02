@@ -23,9 +23,12 @@ aux: docs
 system: arch kernel
 
 install:
-	@echo "Installing kernel into filesystem..."
+	@echo "Copying kernel..."
 	@cp ./kernel.elf fs/kernel.elf
 
+create-fs-x86:
+	@echo "Creating filesystem..."
+	cp -R res/x86/fs/ ../
 kernel: clean kernel/boot.o ${KERNELFILES}
 	@echo "Building Kernel..."
 	@${LD} ${LFLAGS} -T kernel/x86/link.ld -o kernel.elf ${KERNELFILES}
