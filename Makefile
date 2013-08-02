@@ -15,7 +15,7 @@ LD := ./tool/binutils/bin/i586-elf-ld
 LFLAGS := -m elf_i386
 
 #FILES
-KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/lib/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/arch/*.s)) $(patsubst %.c,%.o,$(wildcard kernel/arch/*.c) ) $(patsubst %.c,%.o,$(wildcard kernel/devices/*.c))
+KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/lib/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/x86/*.s)) $(patsubst %.c,%.o,$(wildcard kernel/x86/*.c) ) $(patsubst %.c,%.o,$(wildcard kernel/devices/*.c))
 #Rules
 .PHONY: all clean
 all: configure system install mkmedia dist
@@ -23,59 +23,63 @@ aux: docs
 system: arch kernel
 
 install:
-	@echo -e "\e[1;34mInstalling kernel into filesystem...\e[1;37m"
-	cp ./kernel.elf fs/kernel.elf
+	@echo "Copying kernel..."
+	@cp ./kernel.elf fs/kernel.elf
 
+create-fs-x86:
+	@echo "Creating filesystem..."
+	cp -R res/x86/fs/ ../
 kernel: clean kernel/boot.o ${KERNELFILES}
-	@echo -e "\e[1;34mBuilding Kernel...\e[1;37m"
-	${LD} ${LFLAGS} -T kernel/x86-link.ld -o kernel.elf ${KERNELFILES}
+	@echo "Building Kernel..."
+	@${LD} ${LFLAGS} -T kernel/x86/link.ld -o kernel.elf ${KERNELFILES}
 
 %.o: %.c
-	clang -c -O3 -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector ${OPTIONS}  -ccc-host-triple i586-elf-linux-gnu -I./kernel/includes -o $@ $<
+	@echo "Making: " $@
+	@clang -c -O3 -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector ${OPTIONS}  -ccc-host-triple i586-elf-linux-gnu -I./kernel/includes -o $@ $<
 
-kernel/boot.o: kernel/arch/x86-boot.s
-	${AS} -o kernel/boot.o kernel/arch/x86-boot.s
+%.o: %.s
+	@echo "Making: " $@
+	@nasm -f elf -o $@ $<
+kernel/boot.o: kernel/x86/boot.s
+	@echo "Making: " $@
+	@${AS} -o kernel/boot.o kernel/x86/boot.s
 clean: clean-docs
-	@echo -e "\e[1;34mCleaning junk...\e[1;37m"
-	rm -R -f *.o
-	rm -R -f ./kernel/*.o
-	rm -R -f ./kernel/arch/*.o
-	rm -R -f ./kernel/video/*.o
-	rm -R -f ./kernel/devices/*.o
-	rm -R -f ./kernel/lib/*.o
+	@echo "Cleaning junk..."
+	@rm -R -f *.o
+	@rm -R -f ./kernel/*.o
+	@rm -R -f ./kernel/x86/*.o
+	@rm -R -f ./kernel/video/*.o
+	@rm -R -f ./kernel/devices/*.o
+	@rm -R -f ./kernel/lib/*.o
 
-	rm -f kernel.elf
+	@rm -f kernel.elf
 
 mkmedia: mkmedia-iso
 mkmedia-iso:
-	@echo -e "\e[1;34mCreating ISO...\e[1;37m"
-	genisoimage -R -b boot/grub/stage2_eltorito -input-charset utf-8 -quiet -no-emul-boot -boot-load-size 4 -boot-info-table -o bootable.iso fs
+	@echo "Creating ISO..."
+	@genisoimage -R -b boot/grub/stage2_eltorito -input-charset utf-8 -quiet -no-emul-boot -boot-load-size 4 -boot-info-table -o bootable.iso fs
 
 configure:
-	@echo "Building configure"
-	clang configure.c -o ./configure
-	@echo "Launching configure"
-	./configure
 
 run:
-	echo "Running QEMU"
-	-qemu-system-i386 -cdrom bootable.iso
+	@echo "Running QEMU"
+	@-qemu-system-i386 -cdrom bootable.iso
 docs: clean-docs
-	echo -e "Cleaning Documents"
-	-doxygen Doxyfile
-	echo "Generating LaTeX documentation"
+	@echo -e "Cleaning Documents"
+	@-doxygen Doxyfile
+	@echo "Generating LaTeX documentation"
 clean-docs:
 	-@rm -f -r /docs/
 ready-dist:
-	@echo -e "\e[1;34mPreparing for tarball\e[1;37m"
-	rm -R -f *.o
-	rm -R -f ./kernel/*.o
-	rm -R -f ./kernel/arch/*.o
-	rm -R -f ./kernel/video/*.o
-	rm -R -f ./kernel/devices/*.o
-	rm -R -f ./kernel/lib/*.o
+	@echo "Preparing for tarball"
+	@rm -R -f *.o
+	@rm -R -f ./kernel/*.o
+	@rm -R -f ./kernel/arch/*.o
+	@rm -R -f ./kernel/video/*.o
+	@rm -R -f ./kernel/devices/*.o
+	@rm -R -f ./kernel/lib/*.o
 dist: ready-dist
-	@echo -e "\e[1;34mMaking Distrobution / tarball\e[1;37m"
-	tar --exclude=elementOS-dist.tar --exclude binutils* -cf elementOS-dist.tar --add-file ./
+	@echo "Making Distrobution / tarball"
+	@tar --exclude=elementOS-dist.tar --exclude binutils* -cf elementOS-dist.tar --add-file ./
 arch:
-	@echo -e "\e[1;34mMaking for ${ARCH}\e[1;37m"
+	@echo "Making for ${ARCH}"
