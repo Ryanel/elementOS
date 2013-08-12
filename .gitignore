@@ -176,3 +176,6 @@ docs/
 *.tar.gz
 *.tar
 configure
+
+*.save
+tool/.binutilsinstalled

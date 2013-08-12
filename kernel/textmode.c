@@ -1,7 +1,7 @@
 #include <types.h>
 #include <low.h>
 #include <textmode.h>
-
+#include <vt.h>
 uint16_t *video_memory=(uint16_t*)0xB8000;
 char cursor_x=0;
 char cursor_y=1;
@@ -200,7 +200,6 @@ void tm_print_at(const char *c,int x,int y)
 	cursor_x=o_loc_x;
 	cursor_y=o_loc_y;
 }
-
 void tm_setAttribute(uint8_t color)
 {
 	attributeByte=color;
@@ -209,4 +208,77 @@ void log(const char *type,uint8_t color,const char *c)
 {
     uint8_t attributeByte_o=attributeByte;
     printf("[%^%s%^]:%s",color,type,attributeByte_o,c);
+}
+
+void render_vt(vterm_t term)
+{
+	int startpos=term.y_pos*80+term.x_pos;
+	int done=0;
+	int todo=term.width*term.height;
+	uint16_t attribute = attributeByte << 8;
+	uint16_t *location;
+	int drawx, drawy=0;
+	drawx=term.x_pos;
+	drawy=term.y_pos;
+	char c;
+	while(done!=todo)
+	{
+		c=term.buffer[done];
+		if (c == 0x08 && (drawx - term.x_pos))
+		{
+			drawx--;
+		}
+
+		// Handle a tab by increasing the cursor's X, but only to a point
+		// where it is divisible by 8.
+		else if (c == 0x09)
+		{
+			drawx = (drawx+8) & ~(8-1);
+		}
+
+		// Handle carriage return
+		else if (c == '\r')
+		{
+			drawx = term.x_pos;
+		}
+
+		// Handle newline by moving cursor back to left and increasing the row
+		else if (c == '\n')
+		{
+			int i=0;
+			int max=term.width-(drawx-term.x_pos);
+			while(i!=max)
+			{
+				location = video_memory + (drawy*80 +drawx+i);
+				*location = ' ' | attribute;
+				i++;
+			}
+			drawx = term.x_pos;
+			
+			drawy++;
+		}
+		// Handle any other printable character.
+		else if(c >= ' ')
+		{
+			location = video_memory + (drawy*80 + drawx);
+			*location = c | attribute;
+			drawx++;
+			
+		}
+		else
+		{
+			location = video_memory + (drawy*80 + drawx);
+			*location = ' ' | attribute;
+			drawx++;
+		}
+		// Check if we need to insert a new line because we have reached the end
+		// of the screen.
+		if (drawx >= term.width+term.x_pos)
+		{
+			drawx = term.x_pos;
+			drawy++;
+		}
+		done++;
+	}
+
 }

@@ -14,6 +14,7 @@ Has initialisation functions for the kernel, and contains the entry point
 #include <devices/x86.h>
 #include <arch/stacktrace.h>
 #include <elf.h>
+#include <vt.h>
 
 //Prototypes
 //TODO:Add to includes
@@ -184,10 +185,29 @@ int kinit_x86(int magic, multiboot_header_t *multiboot)
 	kb_install();
 	log(" OK ",0x02,"Installed Keyboard\n");
 	printf("System initialised.\n");
-	int command_running=1;
-	while(command_running)
+	printf("Running VT Tests\n");
+	tty_create(0); //Create VT
+	tty_print(0, "Modal Dialog\n");
+	tty_print(0, "----------------------------------------");
+	tty_print(0, "So? This is cool huh. I thought so.\n");
+	tty_print(0, "By using virtual terminals, I can make modal dialogs and virtual terminals, of course. They even wrap. ");
+	tty_print(0, "However, internal colors, scrolling, clearing, and borders don't work. This gets annoying quickly. Just look down, that's a bug.");
+	tty_setscrnpos(0, 20, 5);
+	tty_setdim(0, 40, 9);
+	tm_setAttribute(0x1F);
+	//tty_render(0);
+	tty_create(1); //Create VT
+	tty_print(1, "BUT!\n");
+	tty_print(1, "----------------------------------------");
+	tty_print(1, "They are good for multitasking\n");
+	tty_print(1, "I plan on having vt0 being kernel only\n");
+	tty_setscrnpos(1, 20, 14);
+	tty_setdim(1, 40, 5);
+	tm_setAttribute(0x2F);
+	//tty_render(1);
+	tm_setAttribute(0x0F);
+	while(true)
 	{
-		kb_popNextFromBuffer();
 	}
 	halt("Reached the end of its execution");
 	return 0;
