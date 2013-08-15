@@ -35,7 +35,7 @@ kernel: clean kernel/boot.o ${KERNELFILES}
 
 %.o: %.c
 	@echo "Making: " $@
-	@clang -c -O3 -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector ${OPTIONS}  -ccc-host-triple i586-elf-linux-gnu -I./kernel/includes -o $@ $<
+	@clang -c -O3 -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector ${OPTIONS}  -target i586-elf -I./kernel/includes -o $@ $<
 
 %.o: %.s
 	@echo "Making: " $@
