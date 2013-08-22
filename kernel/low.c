@@ -12,34 +12,39 @@ inline uint8_t inb(uint16_t port)
    return ret;
 }
 
-inline void *memset(void *dest, char val, size_t count)
-{
-    char *temp = (char *)dest;
-    for( ; count != 0; count--) *temp++ = val;
-    return dest;
+void *memset(void *dest,int val,size_t n) {
+  uint32_t num_dwords = n/4;
+  uint32_t num_bytes = n%4;
+  uint32_t *dest32 = (uint32_t*)dest;
+  uint8_t *dest8 = ((uint8_t*)dest)+num_dwords*4;
+  uint8_t val8 = (uint8_t)val;
+  uint32_t val32 = val|(val<<8)|(val<<16)|(val<<24);
+  uint32_t i;
+
+  for (i=0;i<num_dwords;i++) {
+    dest32[i] = val32;
+  }
+  for (i=0;i<num_bytes;i++) {
+    dest8[i] = val8;
+  }
+  return dest;
 }
-void memset_64(void *dest, uint8 sval, uint64 count)
-{
-  uint64 val = (sval & 0xFF); // create a 64-bit version of 'sval'
-  val |= ((val << 8) & 0xFF00);
-  val |= ((val << 16) & 0xFFFF0000);
-  val |= ((val << 32) & 0xFFFFFFFF00000000);
-    
-  if(!count){return;} // nothing to copy?
-  while(count >= 8){ *(uint64*)dest = (uint64)val; memset_transfers_64++; dest += 8; count -= 8; }
-  while(count >= 4){ *(uint32*)dest = (uint32)val; memset_transfers_32++; dest += 4; count -= 4; }
-  while(count >= 2){ *(uint16*)dest = (uint16)val; memset_transfers_16++; dest += 2; count -= 2; }
-  while(count >= 1){ *(uint8*)dest = (uint8)val; memset_transfers_8++; dest += 1; count -= 1; }
-  return; 
-}
-void memcpy_64(void *dest, void *src, uint64 count)
-{
-  if(!count){return;} // nothing to copy?
-  while(count >= 8){ *(uint64*)dest = *(uint64*)src; memcpy_transfers_64++; dest += 8; src += 8; count -= 8; }
-  while(count >= 4){ *(uint32*)dest = *(uint32*)src; memcpy_transfers_32++; dest += 4; src += 4; count -= 4; }
-  while(count >= 2){ *(uint16*)dest = *(uint16*)src; memcpy_transfers_16++; dest += 2; src += 2; count -= 2; }
-  while(count >= 1){ *(uint8*)dest = *(uint8*)src; memcpy_transfers_8++; dest += 1; src += 1; count -= 1; }
-  return;
+void *memcpy(void *dest,const void *src,size_t n) {
+  uint32_t num_dwords = n/4;
+  uint32_t num_bytes = n%4;
+  uint32_t *dest32 = (uint32_t*)dest;
+  uint32_t *src32 = (uint32_t*)src;
+  uint8_t *dest8 = ((uint8_t*)dest)+num_dwords*4;
+  uint8_t *src8 = ((uint8_t*)src)+num_dwords*4;
+  uint32_t i;
+
+  for (i=0;i<num_dwords;i++) {
+    dest32[i] = src32[i];
+  }
+  for (i=0;i<num_bytes;i++) {
+    dest8[i] = src8[i];
+  }
+  return dest;
 }
 inline int strcmp (char *str1, char *str2)
 {
