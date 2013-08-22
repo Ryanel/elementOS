@@ -25,11 +25,13 @@ int tty_create(int no)
 		return 0;
 	}
 }
+//Prints a character to tty no, with character 
 int tty_putch(int no, char c)
 {
 	term[no].buffer[term[no].x]=c;
 	term[no].x=term[no].x+1;
 }
+//Prints a string to tty no
 void tty_print(int no, const char *c)
 {
    int i = 0;
