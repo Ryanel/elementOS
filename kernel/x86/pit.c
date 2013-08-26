@@ -1,6 +1,7 @@
 //pit.c
 #include <stdio.h>
 #include <arch/x86.h>
+#include <low.h>
 void pit_phase(int hz)
 {
     int divisor = 1193180 / hz;       /* Calculate our divisor */

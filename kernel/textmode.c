@@ -204,7 +204,7 @@ void tm_setAttribute(uint8_t color)
 {
 	attributeByte=color;
 }
-void log(const char *type,uint8_t color,const char *c)
+void ksyslog(const char *type,uint8_t color,const char *c)
 {
     uint8_t attributeByte_o=attributeByte;
     printf("[%^%s%^]:%s",color,type,attributeByte_o,c);

@@ -1,3 +1,5 @@
+#include <string.h>
+#include <low.h>
 struct idt_entry
 {
     unsigned short base_lo;
@@ -41,7 +43,7 @@ int idt_install()
 {
     /* Sets the special IDT pointer up, just like in 'gdt.c' */
     idtp.limit = (sizeof (struct idt_entry) * 256) - 1;
-    idtp.base = &idt;
+    idtp.base = (unsigned int)&idt;
 
     /* Clear out the entire IDT, initializing it to zeros */
     memset(&idt, 0, sizeof(struct idt_entry) * 256);

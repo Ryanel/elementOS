@@ -15,4 +15,5 @@ struct regs
 };
 
 void irq_install_handler(int irq, void (*handler)(struct regs *r));
+void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags);
 #endif

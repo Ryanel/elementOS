@@ -7,6 +7,7 @@
 *  Currently used as a base for elementOS; will change once it is working. (Aka. this is a control)
 * */
 #include <arch/x86.h>
+#include <stdio.h>
 void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags);
 
 
@@ -82,7 +83,7 @@ int isrs_install()
     idt_set_gate(31, (unsigned)isr31, 0x08, 0x8E);
     return 0;
 }
-unsigned char *exception_messages[] =
+ char *exception_messages[] =
 {
     "Division By Zero",
     "Debug",

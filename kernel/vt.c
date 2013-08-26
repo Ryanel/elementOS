@@ -30,6 +30,7 @@ int tty_putch(int no, char c)
 {
 	term[no].buffer[term[no].x]=c;
 	term[no].x=term[no].x+1;
+	return 0;
 }
 //Prints a string to tty no
 void tty_print(int no, const char *c)

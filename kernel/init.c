@@ -86,7 +86,7 @@ int kinit_x86(int magic, multiboot_header_t *multiboot)
 	//Verify Multiboot magic number
 	if (magic!=0x2BADB002)
 	{
-		log("BOOT",0x02,"Magic number unverified!\n");
+		ksyslog("BOOT",0x02,"Magic number unverified!\n");
 		panic("Booted in inconsistent state");
 	}
 	printf("%^%s booted elementOS up properly!%^\n",0x04,multiboot->boot_loader_name,0x0F);
@@ -105,41 +105,41 @@ int kinit_x86(int magic, multiboot_header_t *multiboot)
 	//GDT
 	if(gdt_install()==0)
 	{
-		log(" OK ",0x02,"Installed GDT\n");
+		ksyslog(" OK ",0x02,"Installed GDT\n");
 	}
 	else
 	{
-		log("FAIL",0x02,"GDT installation failed. Kernel cannot initialise!\n");
+		ksyslog("FAIL",0x02,"GDT installation failed. Kernel cannot initialise!\n");
 		halt("GDT could not initialise");
 	}
 
 	if(idt_install()==0)
 	{
-		log(" OK ",0x02,"Installed IDT\n");
+		ksyslog(" OK ",0x02,"Installed IDT\n");
 	}
 	else
 	{
-		log("FAIL",0x02,"IDT installation failed. Kernel cannot initialise!\n");
+		ksyslog("FAIL",0x02,"IDT installation failed. Kernel cannot initialise!\n");
 		halt("IDT could not initialise");
 	}
 
 	if(isrs_install()==0)
 	{
-		log(" OK ",0x02,"Installed ISR's\n");
+		ksyslog(" OK ",0x02,"Installed ISR's\n");
 	}
 	else
 	{
-		log("FAIL",0x02,"ISR installation failed. Kernel cannot initialise!\n");
+		ksyslog("FAIL",0x02,"ISR installation failed. Kernel cannot initialise!\n");
 		halt("ISR's could not initialise");
 	}
 
 	if(irq_install()==0)
 	{
-		log(" OK ",0x02,"Installed IRQ handlers\n");
+		ksyslog(" OK ",0x02,"Installed IRQ handlers\n");
 	}
 	else
 	{
-		log("FAIL",0x02,"IRQ handlers installation failed. Kernel cannot initialise!\n");
+		ksyslog("FAIL",0x02,"IRQ handlers installation failed. Kernel cannot initialise!\n");
 		halt("IRQ handlers could not initialise");
 	}
 
@@ -179,11 +179,11 @@ int kinit_x86(int magic, multiboot_header_t *multiboot)
 		cursor_x=0;
 		cursor_y++;
 		#endif
-		log(" OK ",0x02,"Installed PIT\n");
-		log("PASS",0x02,"Verified IRQ's\n");
+		ksyslog(" OK ",0x02,"Installed PIT\n");
+		ksyslog("PASS",0x02,"Verified IRQ's\n");
 	}
 	kb_install();
-	log(" OK ",0x02,"Installed Keyboard\n");
+	ksyslog(" OK ",0x02,"Installed Keyboard\n");
 	printf("System initialised.\n");
 	while(true)
 	{

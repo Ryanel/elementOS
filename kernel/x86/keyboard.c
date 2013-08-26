@@ -3,6 +3,7 @@
 #include <types.h>
 #include <low.h>
 #include <arch/x86.h>
+#include <stdio.h>
 unsigned char kbdus[256] =
 {
     0,  27, '1', '2', '3', '4', '5', '6', '7', '8',	/* 9 */
@@ -93,7 +94,7 @@ uint8_t kb_sendCommand(uint8_t command)
 {
 	while(true)
 		if ((inb(0x64) & 2) == 0) break;
-
+	return 0;
 }
 
 void kb_addToBuffer(char c)
