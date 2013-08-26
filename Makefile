@@ -10,7 +10,7 @@ DEBUG :=
 AS := @nasm -f elf
 ASM := nasm
 AFLAGS := -f elf
-
+CROSSCOMPILE= -ccc-host-triple ${ARCH}
 LD := ./tool/binutils/bin/i586-elf-ld
 LFLAGS := -m elf_i386
 
@@ -35,7 +35,7 @@ kernel: clean kernel/boot.o ${KERNELFILES}
 
 %.o: %.c
 	@echo "Making: " $@
-	@clang -c -O3 -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector ${OPTIONS}  -target i586-elf -I./kernel/includes -o $@ $<
+	@clang -c -O3 -w -ffreestanding -fno-builtin  -nostdlib -nostdinc -fno-stack-protector ${OPTIONS} ${CROSSCOMPILE} -I./kernel/includes -o $@ $<
 
 %.o: %.s
 	@echo "Making: " $@
