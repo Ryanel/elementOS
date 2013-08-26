@@ -19,8 +19,24 @@ Has initialisation functions for the kernel, and contains the entry point
 //Prototypes
 //TODO:Add to includes
 
+int strcmp (const char *str1,const char *str2)
+{
+    while (*str1 != 0 && *str2 != 0)
+    {
+        if (*str1 != *str2)
+        {
+            return str1 - str2;
+        }
+
+        str1++; str2++;
+    }
+
+    return 0;
+}
+
 void panic(char* reason);
 void halt(char* reason);
+void woah(char* reason);
 
 char kb_readFromBuffer(int index);
 char kb_popNextFromBuffer();
@@ -184,9 +200,64 @@ int kinit_x86(int magic, multiboot_header_t *multiboot)
 	}
 	kb_install();
 	ksyslog(" OK ",0x02,"Installed Keyboard\n");
-	printf("System initialised.\n");
 	while(true)
 	{
+		printf("tabris@element-os:/# ");
+		char recievedKey;
+		char buffer[256];
+		int buffer_insert=0;
+		while(recievedKey!='\n')
+		{
+			recievedKey=kb_waitForInput();
+			buffer[buffer_insert]=recievedKey;
+			buffer_insert++;
+		}
+		buffer[buffer_insert-1]=0;
+		if(strcmp((char *)buffer,"ls")==0)
+		{
+			printf("No mounted filesystem.\n");
+		}
+		else if(strcmp((char *)buffer,"halt")==0)
+		{
+			printf("Halting...\n");
+			halt("was told to");
+		}
+		else if(strcmp((char *)buffer,"clear")==0)
+		{
+			tm_clear();
+		}
+		else if(strcmp((char *)buffer,"shell")==0)
+		{
+			printf("elementOS integrated shell - v. 1\n");
+		}
+		else if(strcmp((char *)buffer,"sysinfo")==0)
+		{
+			woah("Unimplemented function! Yell at me at lioneltabre@gmail.com to fix it");
+		}
+		else if(strcmp((char *)buffer,"help")==0)
+		{
+			printf("Possible commands: help ls halt clear shell sysinfo mem debugger\n");
+		}
+		else if(strcmp((char *)buffer,"mem")==0)
+		{
+			memtotal = (multiboot->mem_upper)+(multiboot->mem_lower);
+			memtotalmb = memtotal/1024;
+			printf("%^%d kb%^ high, %^%d kb%^ low; a total of %^~%d mb%^ %^(%d kb)%^\n",0x03,multiboot->mem_upper,0x0F,0x0C,multiboot->mem_lower,0x0F,0x02,memtotalmb+1,0x0F,0x0A,memtotal,0x0F);
+		}
+		else
+		{
+			printf("Error:%s is not a recognised command! \"help\", however is.\n",(char *)buffer);
+		}
+
+		//Cleanup
+		recievedKey=0;
+		buffer_insert=0;
+		while(buffer_insert!=255)
+		{
+			buffer[buffer_insert]=0;
+			buffer_insert++;
+		}
+		buffer_insert=0;
 	}
 	halt("Reached the end of its execution");
 	return 0;

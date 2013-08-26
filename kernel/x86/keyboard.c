@@ -110,6 +110,17 @@ char kb_readFromBuffer(int index)
 {
 	return character_buffer[index];
 }
+char input=0;
+char kb_waitForInput()
+{
+	while(input==0)
+	{
+
+	}
+  char ret=input;
+  input=0;
+	return ret;
+}
 
 char kb_popNextFromBuffer()
 {
@@ -156,20 +167,21 @@ void keyboard_handler(struct regs *r)
 				keystat_numlock = true;
 				break;
 			case 58: //Capslock
-				keystat_capslock=keystat_capslock; //Make it flip later
+				keystat_capslock=!keystat_capslock; //Make it flip later
 				break;
 			default:
 				if(keystat_shift)
-        {
-          printf("%c",kbdus_sft[scancode]);
-          kb_addToBuffer(kbdus_sft[scancode]);
-        }
+				{
+					printf("%c",kbdus_sft[scancode]);
+					kb_addToBuffer(kbdus_sft[scancode]);
+					input=kbdus_sft[scancode];
+				}
 				else
-        {
-          printf("%c",kbdus_sft[scancode]);
-          kb_addToBuffer(kbdus[scancode]);
-        }
-          
+				{
+					printf("%c",kbdus[scancode]);
+					kb_addToBuffer(kbdus[scancode]);
+					input=kbdus[scancode];
+				}
 				break;
 
 		}

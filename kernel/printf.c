@@ -16,6 +16,15 @@
 2^32-1 in base 8 has 11 digits (add 5 for trailing NUL and for slop) */
 #define	PR_BUFLEN	16
 #define NULL 0
+
+unsigned int strlen(unsigned char *str)
+{
+	unsigned const char *wrk=str;
+    int retval;
+    for(retval = 0; *wrk != '\0'; wrk++) retval++;
+    return retval;
+}
+
 typedef int (*fnptr_t)(unsigned c, void **helper);
 /*****************************************************************************
 name:	do_printf

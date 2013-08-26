@@ -3,14 +3,14 @@
 # Based on the Makefile of Kevin Lange (https://github.com/klange)
 #=================================================================
 #Setup
-ARCH := i386-elf-linux-gnu
+ARCH := i386-elf
 CFLAGS := -nostdlib -ffreestanding -fno-builtin -nostdinc -fno-stack-protector
 OPTIONS := -D ENABLE_DEBUG #-D OPT_NO_PROGRESS_BARS
 DEBUG :=
 AS := @nasm -f elf
 ASM := nasm
 AFLAGS := -f elf
-CROSSCOMPILE= #-ccc-host-triple ${ARCH}
+CROSSCOMPILE= -target ${ARCH}
 LD := ./tool/binutils/bin/i586-elf-ld
 LFLAGS := -m elf_i386
 

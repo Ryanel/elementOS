@@ -49,6 +49,6 @@ Called when something unexpected happens.
 void woah(char* reason)
 {
 	//tm_print("WOAH! "); tm_print(reason); tm_print("!\n"); 
-	ksyslog("WOAH",0x0C,"Kernel "); tm_print(reason); tm_print("!\n");
+	ksyslog("WOAH",0x0C,""); printf("%s\n",reason);
 }
 
