@@ -181,6 +181,7 @@ int kinit_x86(int magic, multiboot_header_t *multiboot)
 	}
 	kb_install();
 	ksyslog(" OK ",0x02,"Installed Keyboard\n");
+	detect_cpu();
 	while(true)
 	{
 	}
