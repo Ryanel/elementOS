@@ -15,24 +15,6 @@ Has initialisation functions for the kernel, and contains the entry point
 
 //Prototypes
 //TODO:Add to includes
-/**
-Compairs two strings.
-**/
-int strcmp (const char *str1,const char *str2)
-{
-	while (*str1 != 0 && *str2 != 0)
-	{
-		if (*str1 != *str2)
-		{
-			return str1 - str2;
-		}
-
-		str1++; str2++;
-	}
-
-	return 0;
-}
-
 void panic(char* reason);
 void halt(char* reason);
 void woah(char* reason);
