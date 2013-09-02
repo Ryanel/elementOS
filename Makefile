@@ -18,7 +18,7 @@ LFLAGS := -m elf_i386
 KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/lib/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/x86/*.s)) $(patsubst %.c,%.o,$(wildcard kernel/x86/*.c) ) $(patsubst %.c,%.o,$(wildcard kernel/devices/*.c))
 #Rules
 .PHONY: all clean
-all: configure system install mkmedia run
+all: configure system install mkmedia docs
 aux: docs
 system: arch kernel
 

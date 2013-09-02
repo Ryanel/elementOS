@@ -1,5 +1,6 @@
 #include <string.h>
 #include <low.h>
+///An entry in the IDT
 struct idt_entry
 {
     unsigned short base_lo;
@@ -8,7 +9,7 @@ struct idt_entry
     unsigned char flags;       /* Set using the above table! */
     unsigned short base_hi;
 } __attribute__((packed));
-
+///Points to the IDT; passed to lidt
 struct idt_ptr
 {
     unsigned short limit;

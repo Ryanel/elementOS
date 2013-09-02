@@ -12,7 +12,7 @@
 #define MULTIBOOT_FLAG_LOADER  0x100
 #define MULTIBOOT_FLAG_APM     0x200
 #define MULTIBOOT_FLAG_VBE     0x400
-
+///The informational struct passed to us by GRUB
 typedef struct multiboot
 {
    uint32_t flags;

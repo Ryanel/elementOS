@@ -11,7 +11,6 @@ Has initialisation functions for the kernel, and contains the entry point
 #include <multiboot.h>
 #include <arch/x86.h>
 #include <devices/x86.h>
-#include <arch/stacktrace.h>
 #include <vt.h>
 
 //Prototypes
@@ -21,17 +20,17 @@ Compairs two strings.
 **/
 int strcmp (const char *str1,const char *str2)
 {
-    while (*str1 != 0 && *str2 != 0)
-    {
-        if (*str1 != *str2)
-        {
-            return str1 - str2;
-        }
+	while (*str1 != 0 && *str2 != 0)
+	{
+		if (*str1 != *str2)
+		{
+			return str1 - str2;
+		}
 
-        str1++; str2++;
-    }
+		str1++; str2++;
+	}
 
-    return 0;
+	return 0;
 }
 
 void panic(char* reason);

@@ -12,7 +12,7 @@ Manages all aspects of the memory.
 #include <memory.h>
 
 uint32_t placement_address = 0;
-
+///Prints a debug message
 void mem_debug(char* message)
 {
 	#ifdef ENABLE_DEBUG

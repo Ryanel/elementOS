@@ -1,5 +1,6 @@
 #include <types.h>
 #include <textmode.h>
+///An entry in the GDT
 struct gdt_entry
 {
     unsigned short limit_low;
@@ -9,6 +10,7 @@ struct gdt_entry
     unsigned char granularity;
     unsigned char base_high;
 } __attribute__((packed));
+///A pointer to the GDT; passsed to lgdt
 struct gdt_ptr
 {
     unsigned short limit;
