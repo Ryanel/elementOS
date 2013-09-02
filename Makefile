@@ -4,7 +4,7 @@
 #=================================================================
 #Setup
 ARCH := i386-elf
-CFLAGS := -nostdlib -ffreestanding -fno-builtin -nostdinc -fno-stack-protector
+CFLAGS := -nostdlib -ffreestanding -fno-builtin -w -nostdinc -fno-stack-protector
 OPTIONS := -D ENABLE_DEBUG #-D OPT_NO_PROGRESS_BARS
 DEBUG :=
 AS := @nasm -f elf
@@ -18,7 +18,7 @@ LFLAGS := -m elf_i386
 KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/lib/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/video/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/x86/*.s)) $(patsubst %.c,%.o,$(wildcard kernel/x86/*.c) ) $(patsubst %.c,%.o,$(wildcard kernel/devices/*.c))
 #Rules
 .PHONY: all clean
-all: configure system install mkmedia dist
+all: configure system install mkmedia run
 aux: docs
 system: arch kernel
 

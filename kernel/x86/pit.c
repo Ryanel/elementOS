@@ -37,7 +37,11 @@ int pit_has_ticked() //If no ticks, returns 0, else it returns how many ticks ha
 	int retval=timer_ticks-timer_ticks_old;
 	timer_ticks_old=timer_ticks;
 	return retval;
+}
 
+int getUptime()
+{
+    return timer_ticks/18;
 }
 
 void pit_wait(int ticks)

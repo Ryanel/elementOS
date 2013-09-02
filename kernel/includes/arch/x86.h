@@ -13,7 +13,7 @@ struct regs
 	unsigned int int_no, err_code;    /* our 'push byte #' and ecodes do this */
 	unsigned int eip, cs, eflags, useresp, ss;   /* pushed by the processor automatically */ 
 };
-
+typedef struct regs registers_t;
 void irq_install_handler(int irq, void (*handler)(struct regs *r));
 void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags);
 #endif
