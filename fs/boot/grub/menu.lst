@@ -1,4 +1,4 @@
 default=0
 timeout=30
-title elementOS - UNSTABLE
+title elementOS
 kernel /kernel.elf
