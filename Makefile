@@ -11,6 +11,8 @@ AS := @nasm -f elf
 ASM := nasm
 AFLAGS := -f elf
 CROSSCOMPILE= -target ${ARCH}
+#TODO: Autodetect if using a old clang version
+#CROSSCOMPILE= -ccc-host-triple i586-elf-linux-gnu
 LD := ./tool/binutils/bin/i586-elf-ld
 LFLAGS := -m elf_i386
 
