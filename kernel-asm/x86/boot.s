@@ -17,7 +17,7 @@ MBOOT_CHECKSUM      equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
 [EXTERN bss]
 [EXTERN end]
 section .__mbHeader
-align 0x4
+align 4
 mboot:
 	dd  MBOOT_HEADER_MAGIC
 	dd  MBOOT_HEADER_FLAGS

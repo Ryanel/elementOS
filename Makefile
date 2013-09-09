@@ -10,7 +10,7 @@ DEBUG :=
 AS := @nasm -f elf
 ASM := nasm
 AFLAGS := -f elf
-CROSSCOMPILE= -target ${ARCH}
+CROSSCOMPILE= -ccc-host-triple i386-elf
 LD := ./tool/binutils/bin/i586-elf-ld
 LFLAGS := -m elf_i386
 

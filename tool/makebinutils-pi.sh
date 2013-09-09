@@ -12,7 +12,7 @@ function grab () {
 echo "Building binutils"
 grab "binutils" "http://ftp.gnu.org/gnu/binutils" "binutils-2.22.tar.gz"
 echo "Extracting..."
-#tar -xf binutils-2.22.tar.gz
+tar -xf binutils-2.22.tar.gz
 mkdir binutils-pi
 mkdir build-binutils
 cd build-binutils
