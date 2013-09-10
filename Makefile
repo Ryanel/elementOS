@@ -4,9 +4,9 @@
 #=================================================================
 ARCH = i386-elf
 ARCHDIR = x86
-#CROSSCOMPILE = -target ${ARCH}
+CROSSCOMPILE = -target ${ARCH}
 #TODO: Autodetect if using a old clang version
-CROSSCOMPILE = -ccc-host-triple ${ARCH}-elf
+#ROSSCOMPILE = -ccc-host-triple ${ARCH}-elf
 AS := @nasm
 CC := clang
 ASFLAGS := -f elf
