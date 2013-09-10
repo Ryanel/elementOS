@@ -179,3 +179,5 @@ configure
 
 *.save
 tool/.binutilsinstalled
+
+fs/*
