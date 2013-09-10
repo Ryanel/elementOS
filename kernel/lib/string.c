@@ -1,7 +1,7 @@
 #include <string.h>
-/**
+/*
 Compairs two strings.
-**/
+*/
 int strcmp (const char *str1,const char *str2)
 {
 	while (*str1 != 0 && *str2 != 0)
