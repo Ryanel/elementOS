@@ -181,3 +181,5 @@ configure
 tool/.binutilsinstalled
 
 fs/*
+
+tool/binutils-pi/

@@ -1,36 +1,32 @@
-/* Link.ld -- Linker script for the kernel - ensure everything goes in the */
-/*            Correct place.  */
-/*            Original file taken from Bran's Kernel Development */
-/*            tutorials: http://www.osdever.net/bkerndev/index.php. */
+SECTIONS {
+	/*
+	* First and formost we need the .init section, containing the code to
+        * be run first. We allow room for the ATAGs and stack and conform to
+        * the bootloader's expectation by putting this code at 0x8000.
+	*/
+	.init 0x8000 : {
+		*(.init)
+	}
 
-ENTRY(start)
-SECTIONS
-{
-  . = 1M;
-  .__mbHeader : {
-      *(.__mbHeader)
-  }
-  .text :
-  {
-    code = .; _code = .; __code = .;
-    *(.text)
-    . = ALIGN(4096);
-  }
+	/*
+	* Next we put the rest of the code.
+	*/
+	.text : {
+		*(.text)
+	}
 
-  .data :
-  {
-     data = .; _data = .; __data = .;
-     *(.data)
-     *(.rodata)
-     . = ALIGN(4096);
-  }
+	/*
+	* Next we put the data.
+	*/
+	.data : {
+		*(.data)
+	}
 
-  .bss :
-  {
-    bss = .; _bss = .; __bss = .;
-    *(.bss)
-    . = ALIGN(4096);
-  }
-
-  end = .; _end = .; __end = .;
+	/*
+	* Finally comes everything else. A fun trick here is to put all other
+	* sections into this section, which will be discarded by default.
+	*/
+	/DISCARD/ : {
+		*(*)
+	}
 }

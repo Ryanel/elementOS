@@ -14,11 +14,11 @@ CFLAGS := -nostdlib -ffreestanding -fno-builtin -w -nostdinc -fno-stack-protecto
 KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/lib/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/${ARCHDIR}/*.s)) $(patsubst %.c,%.o,$(wildcard kernel/${ARCHDIR}/*.c))
 .PHONY: all clean
 
-all: arch clean prep-fs kernel iso rpi
+all: arch clean prep-fs kernel iso
 
 rpi:
 	@echo "Doing recursive make into rpi enviroment"
-	@make arch clean prep-fs kernel  -e ARCH=armv6-linux-gnueabihf ARCHDIR=rpi CROSSCOMPILE="-ccc-host-triple ${ARCH} -mfloat-abi=hard"
+	@make arch clean prep-fs kernel  -e ARCH=armv6-linux-gnueabihf LD="./tool/binutils-pi/bin/arm-none-eabi-ld --no-undefined" AS="./tool/binutils-pi/bin/arm-none-eabi-as" ARCHDIR=rpi CROSSCOMPILE="-ccc-host-triple ${ARCH} -mfloat-abi=hard"
 
 ./kernel/boot.o:
 	@nasm -f elf -o ./kernel/boot.o ./kernel/${ARCHDIR}/boot.s
@@ -36,10 +36,11 @@ kernel: ${KERNELFILES} ./kernel/boot.o
 
 %.o: %.s
 	@echo "Making: " $@
-	@nasm -f elf -o $@ $<
+	${AS} -o $@ $<
 clean: clean-docs
 	@echo "Cleaning junk..."
 	@rm -R -f *.o
+	@rm -R -f bootable.iso
 	@rm -R -f ./kernel/*.o
 	@rm -R -f ./kernel/x86/*.o
 	@rm -R -f ./kernel/rpi/*.o
@@ -47,7 +48,7 @@ clean: clean-docs
 	@rm -R -f ./kernel/devices/*.o
 	@rm -R -f ./kernel/lib/*.o
 	@rm -R -f ./kernel/lib/*.o
-	@rm -f kernel.elf
+	@rm -f kernel*.elf
 	@rm -R -f ./fs/*
 
 iso:

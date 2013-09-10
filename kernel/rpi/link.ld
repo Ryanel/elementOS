@@ -1,8 +1,4 @@
-ENTRY(start)
-
-SECTIONS
-{
-    /* Starts at LOADER_ADDR. */
+SECTIONS {
     . = 0x8000;
     _start = .;
     _text_start = .;
@@ -11,7 +7,7 @@ SECTIONS
         KEEP(*(.text.boot))
         *(.text)
     }
-    . = ALIGN(4096); /* align to page size */
+    . = ALIGN(4096);
     _text_end = .;
 
     _rodata_start = .;
@@ -19,7 +15,7 @@ SECTIONS
     {
         *(.rodata)
     }
-    . = ALIGN(4096); /* align to page size */
+    . = ALIGN(4096);
     _rodata_end = .;
 
     _data_start = .;
@@ -27,7 +23,7 @@ SECTIONS
     {
         *(.data)
     }
-    . = ALIGN(4096); /* align to page size */
+    . = ALIGN(4096);
     _data_end = .;
 
     _bss_start = .;
@@ -36,7 +32,7 @@ SECTIONS
         bss = .;
         *(.bss)
     }
-    . = ALIGN(4096); /* align to page size */
+    . = ALIGN(4096);
     _bss_end = .;
     _end = .;
 }
