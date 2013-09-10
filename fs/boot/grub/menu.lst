@@ -1,4 +1,0 @@
-default=0
-timeout=30
-title elementOS
-kernel /kernel.elf

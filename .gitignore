@@ -183,3 +183,6 @@ tool/.binutilsinstalled
 fs/*
 
 tool/binutils-pi/
+
+*.img
+*.elf
