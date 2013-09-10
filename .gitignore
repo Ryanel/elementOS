@@ -186,3 +186,7 @@ tool/binutils-pi/
 
 *.img
 *.elf
+
+#Backup Files
+*.*~
+*~
