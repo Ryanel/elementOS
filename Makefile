@@ -28,6 +28,10 @@ install:
 	@echo "Copying kernel..."
 	@cp ./kernel.elf fs/kernel.elf
 
+dep:
+    @echo "Building Dependancies"
+    @echo "Unimplemented!"
+
 create-fs-x86:
 	@echo "Creating filesystem..."
 	cp -R res/x86/fs/ ../
