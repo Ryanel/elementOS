@@ -4,7 +4,7 @@ export PREFIX="$DIR/binutils"
 function grab () {
     echo "Pulling $1..."
     if [ ! -f "$3" ]; then
-        wget -q "$2/$3"
+        wget "$2/$3"
     else
         echo "Already have $1"
     fi
