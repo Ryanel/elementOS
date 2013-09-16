@@ -9,7 +9,7 @@ void tm_print(const char *c);
 void tm_print_at(const char *c,int x,int y);
 void tm_setAttribute(uint8_t color);
 void move_cursor();
-void ksyslog(const char *type,uint8_t color,const char *c);
+//void ksyslog(const char *type,uint8_t color,const char *c);
 extern char cursor_x;
 extern char cursor_y;
 void render_vt(vterm_t term);

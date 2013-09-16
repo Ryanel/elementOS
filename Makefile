@@ -4,18 +4,15 @@
 #=================================================================
 ARCH = i386-elf
 ARCHDIR = x86
-CROSSCOMPILE = -target ${ARCH}
+#CROSSCOMPILE = -target ${ARCH}
 #TODO: Autodetect if using a old clang version
-#ROSSCOMPILE = -ccc-host-triple ${ARCH}-elf
+CROSSCOMPILE = -ccc-host-triple ${ARCH}-elf
 AS := @nasm
 CC := clang
 ASFLAGS := -f elf
 LD := ./tool/binutils/bin/i586-elf-ld
 LFLAGS := -m elf_i386
-CFLAGS := -nostdlib -ffreestanding -fno-builtin -w -nostdinc -fno-stack-protector
-CFLAGS := -fpic -nostdlib
-CFLAGS += -nostartfiles -nodefaultlibs
-CFLAGS += -fomit-frame-pointer
+CFLAGS := -nostdlib -ffreestanding -fno-builtin -nostdinc -fno-stack-protector
 KERNELFILES := $(patsubst %.c,%.o,$(wildcard kernel/*.c)) $(patsubst %.c,%.o,$(wildcard kernel/lib/*.c)) $(patsubst %.s,%.o,$(wildcard kernel/${ARCHDIR}/*.s)) $(patsubst %.c,%.o,$(wildcard kernel/${ARCHDIR}/*.c))
 .PHONY: all clean
 
@@ -70,7 +67,7 @@ run-x86:
 	@-qemu-system-i386 -cdrom bootable.iso
 run-rpi:
 	@echo "Running QEMU for rpi"
-	@-qemu-system-arm -kernel kernel-rpi.elf -cpu arm1176 -m 256 -nographic -M versatilepb -no-reboot -append "root=/dev/sda2 panic=1"
+	@-qemu-system-arm -kernel kernel-rpi.elf -cpu arm1176 -m 256 -M versatilepb
 docs: clean-docs
 	@echo -e "Cleaning Documents"
 	@-doxygen Doxyfile

@@ -1,25 +1,28 @@
-.section .init
-.globl _start
+
+.equ SCREEN_HEIGHT, 768
+.equ SCREEN_WIDTH, 1360
+.equ COLOR_DEPTH, 16
 
 _start:
-	mov	sp, #0x8000
-	ldr	r4, =_bss_start
-	ldr	r9, =_bss_end
-	mov	r5, #0
-	mov	r6, #0
-	mov	r7, #0
-	mov	r8, #0
-	b 2f
-1:
-	stmia	r4!, {r5-r8}
+	mov r0,#SCREEN_WIDTH /* was 1024 */
+	mov r1,#SCREEN_HEIGHT
+	mov r2,#COLOR_DEPTH
+	bl InitialiseFrameBuffer
+	fbInfoAddr .req r4
+	mov fbInfoAddr,r0
+	bl SetGraphicsAddress
+	ldr r0, =format
+	mov r1, #11
+	ldr r2, =buffer
+	ldr r3,[fbInfoAddr]
+	bl FormatString
+	b main
 
-2:
-	cmp	r4, r9
-	blo	1b
-
-	ldr	r3, =kernel_main
-	blx	r3
-
-halt:
-	wfe
-	b	halt
+.section .data
+format:
+.rept 20
+	.ascii "---------|"
+.endr
+formatEnd:
+buffer:
+	.space 256
