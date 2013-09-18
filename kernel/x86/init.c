@@ -77,11 +77,11 @@ int kinit_x86(int magic, multiboot_header_t *multiboot)
 
 	printf("%^%s v.%s (%s) (%s)...%^\n",0x09,RES_STARTMESSAGE_S,RES_VERSION_S,RES_SOURCE_S,RES_ARCH_S,0x0F);
 	printf("%^Codename:\"%s\"%^\n",0x09,RES_CODENAME_S,0x0F);
-	ksyslog_setmask(MODE_WARN);
+	ksyslog_setmask(MODE_DEBUG);
 	//Verify Multiboot magic number
 	if (magic!=0x2BADB002)
 	{
-		ksyslog("BOOT",0x00,"Magic number is invalid");
+		ksyslog("BOOT",MODE_PANIC,"Magic number is invalid");
 		panic("Booted in inconsistent state!");
 	}
 	ksyslog("BOOT",MODE_DEBUG,"Multiboot verified");
@@ -94,16 +94,16 @@ int kinit_x86(int magic, multiboot_header_t *multiboot)
 	//Init
 
 	gdt_install();
-	ksyslog(" OK ",MODE_INFO,"Installed GDT");
+	ksyslog(" OK ",MODE_DEBUG,"Installed GDT");
 
 	idt_install();
-	ksyslog(" OK ",MODE_INFO,"Installed IDT");
+	ksyslog(" OK ",MODE_DEBUG,"Installed IDT");
 
 	isrs_install();
-	ksyslog(" OK ",MODE_INFO,"Installed ISR's");
+	ksyslog(" OK ",MODE_DEBUG,"Installed ISR's");
 
 	irq_install();
-	ksyslog(" OK ",MODE_INFO,"Installed IRQ handlers");
+	ksyslog(" OK ",MODE_DEBUG,"Installed IRQ handlers");
 
 	pit_install();
 	pit_phase(1000);
@@ -111,12 +111,13 @@ int kinit_x86(int magic, multiboot_header_t *multiboot)
 	ksyslog(" OK ",MODE_INFO,"Installed PIT");
 
 	kb_install();
-	ksyslog(" OK ",MODE_INFO,"Installed Keyboard");
+	ksyslog("UNIM",MODE_DEBUG,"Installed Keyboard");
 
-	ksyslog("SYST",MODE_INFO,"System finished initialising\n");
+	paging_install();
+	//ksyslog(" OK ",MODE_DEBUG,"Installed Paging");
 
-	ksyslog("DECT",MODE_DEBUG,"Detecting Hardware...");
-	detect_cpu();
+	ksyslog("SYST",MODE_INFO,"System finished initialising");
+
 
 	while(true)
 	{

@@ -1,6 +1,7 @@
 #include <textmode.h>
 #include <stdio.h>
-#include <res/strings.h> 
+#include <res/strings.h>
+#include <ksyslogd.h>
 volatile unsigned char *videoram = (unsigned char *)0xB8000; //For pip
 //#include <error.h>
 
@@ -10,11 +11,8 @@ Stops the machine
 void halt(char* reason)
 {
 	//tm_print("[ HALT ]Kernel sent SIG_HALT because "); tm_print(reason); tm_print(".\n");
-	printf("================================================================================");//Line of 80 characters
-	ksyslog(RES_ERROR_HALT_S,0x0C,RES_ERROR_HALTMSG_SIGHALT_S); printf("%s.\n",reason);
+	ksyslog("HALT",MODE_PANIC,"Halting!");
 
-	ksyslog(RES_ERROR_HALT_S,0x0C,RES_ERROR_HALTMSG_S);
-	
 	asm("cli");
 	videoram[0]=RES_PIP_HALTED_C;
 	while(1)
@@ -29,9 +27,9 @@ Called when something errors, but it is NOT recoverable.
 **/
 void panic(char* reason)
 {
-	ksyslog("PANIC",0x0C,"Kernel Panic! Given reason:"); printf("%s!\n",reason); //tm_print(reason); tm_print(".\n");
-	ksyslog("PANIC",0x0C,"Debug info:\n");
-	ksyslog("PANIC",0x0C,"Registers: Failed to retrieve information\n");
+	ksyslog("PANIC",MODE_PANIC,"Kernel Panic!");
+	printf("Reason:%s!\n",reason); //tm_print(reason); tm_print(".\n");
+	ksyslog("PANIC",MODE_PANIC,"Registers: Failed to retrieve information");
 	halt("kernel panic");
 }
 
@@ -40,7 +38,7 @@ Called when something errors, but it is recoverable.
 **/
 void oops(char* reason)
 {
-	ksyslog("OOPS",0x0C,"Kernel "); tm_print(reason); tm_print("!\n");
+	ksyslog("OOPS",MODE_CRIT,reason);
 }
 
 /**
@@ -48,7 +46,7 @@ Called when something unexpected happens.
 **/
 void woah(char* reason)
 {
-	//tm_print("WOAH! "); tm_print(reason); tm_print("!\n"); 
-	ksyslog("WOAH",0x0C,""); printf("%s\n",reason);
+	//tm_print("WOAH! "); tm_print(reason); tm_print("!\n");
+	ksyslog("WOAH",MODE_WARN,reason);
 }
 
