@@ -2,12 +2,14 @@
 #include <stdio.h>
 #include <arch/x86.h>
 #include <low.h>
+int rate=18;
 void pit_phase(int hz)
 {
 	int divisor = 1193180 / hz;       /* Calculate our divisor */
 	outb(0x43, 0x36);             /* Set our command byte 0x36 */
 	outb(0x40, divisor & 0xFF);   /* Set low byte of divisor */
 	outb(0x40, divisor >> 8);     /* Set high byte of divisor */
+	rate=hz;
 }
 int timer_ticks = 0;
 int timer_ticks_old = 0;
@@ -41,7 +43,7 @@ int pit_has_ticked() //If no ticks, returns 0, else it returns how many ticks ha
 
 int getUptime()
 {
-	return timer_ticks/18;
+	return timer_ticks/rate;
 }
 
 void pit_wait(int ticks)

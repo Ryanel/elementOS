@@ -7,18 +7,12 @@ Manages all aspects of the memory.
 //Includes
 #include <types.h>
 #include <stdio.h>
-
+#include <ksyslogd.h>
 //Self
 #include <memory.h>
-
-uint32_t placement_address = 0;
+extern uint32_t end;
+uint32_t placement_address = (uint32_t)&end;;
 ///Prints a debug message
-void mem_debug(char* message)
-{
-	#ifdef ENABLE_DEBUG
-	printf("[MEM]:%s\n",message);
-	#endif
-}
 
 uint32_t kmalloc_int(uint32_t sz, int align, uint32_t *phys)
 {
@@ -35,6 +29,7 @@ uint32_t kmalloc_int(uint32_t sz, int align, uint32_t *phys)
 	//Do the actuall allocation
 	uint32_t tmp = placement_address;
 	placement_address += sz;
+	printf("Allocated %d bytes (aligned %d) at address 0x%X\n",sz,align,placement_address-0x1000);
 	return tmp;
 }
 /**

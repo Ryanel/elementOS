@@ -111,16 +111,16 @@ int kinit_x86(int magic, multiboot_header_t *multiboot)
 	ksyslog(" OK ",MODE_INFO,"Installed PIT");
 
 	kb_install();
-	ksyslog("UNIM",MODE_DEBUG,"Installed Keyboard");
+	ksyslog(" OK ",MODE_DEBUG,"Installed Keyboard");
 
-	paging_install();
-	//ksyslog(" OK ",MODE_DEBUG,"Installed Paging");
+	initialise_paging();
+	ksyslog(" OK ",MODE_DEBUG,"Installed Paging");
 
 	ksyslog("SYST",MODE_INFO,"System finished initialising");
 
-
 	while(true)
 	{
+
 	}
 	halt("ended");
 	return 0;

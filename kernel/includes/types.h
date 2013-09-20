@@ -13,4 +13,6 @@ typedef unsigned char  uint8_t;
 typedef          char  sint8_t;
 
 typedef unsigned int   size_t;
+
+#define ASSERT(b) ((b) ? (void)0 : printf("ASSERT FAILED: %s at line %s, %s\n",__FILE__, __LINE__, #b))
 #endif
