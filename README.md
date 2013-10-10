@@ -8,8 +8,14 @@ The kernel, ununtrium or 113, is your run of the mill macrokernel for now. It wi
 
 Building
 --------
-You need to have nasm gcc clang make flex bison libgmp3-dev libmpfr-dev libmpc-dev libmpc-dev genisoimage doxygen installed in order to compile. ( On debian based systems sudo apt-get install nasm qemu gcc make flex bison libgmp3-dev libmpfr-dev libmpc-dev libmpc-dev genisoimage doxygen ). 
-You then cd into ./tool and run chmod +x ./makebinutils.sh && ./makebinutils.sh .
+You need to have nasm, gcc, clang, make, flex, bison, libgmp3-dev, libmpfr-dev, libmpc-dev, libmpc-dev, genisoimage and doxygen installed in order to compile. 
+
+On debian:
+>sudo apt-get install nasm qemu clang gcc make flex bison libgmp3-dev libmpfr-dev libmpc-dev libmpc-dev genisoimage doxygen
+
+You then cd into ./tool and run chmod +x ./makebinutils.sh && ./makebinutils.sh
+> cd ./tool && chmod +x ./makebinutils.sh && ./makebinutils.sh
+
 This builds the cross compiler. Then simply go to the root project folder and build the os with make .
 Then, just simply type make run to launch qemu.
 
